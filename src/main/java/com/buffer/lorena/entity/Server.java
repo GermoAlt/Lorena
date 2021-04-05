@@ -1,8 +1,13 @@
 package com.buffer.lorena.entity;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-public class Servers {
-
+@Entity
+@Table(name = "servers")
+public class Server {
+  @Id
   private long idServer;
   private String servName;
   private long discIdServer;

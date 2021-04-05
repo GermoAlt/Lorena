@@ -1,8 +1,14 @@
 package com.buffer.lorena.entity;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-public class Lores {
+@Entity
+@Table(name = "lores")
+public class Lore {
 
+  @Id
   private long idLore;
   private long loreMessageId;
   private String loreStatus;
