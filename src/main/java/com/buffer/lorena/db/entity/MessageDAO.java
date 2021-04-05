@@ -1,22 +1,33 @@
-package com.buffer.lorena.entity;
+package com.buffer.lorena.db.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "messages")
-public class Message {
+public class MessageDAO {
 
   @Id
+  @GeneratedValue
+  private long idMessage;
   private long discIdMessage;
   private String messageText;
   private long idUser;
   private long idServ;
-  private long idMessage;
   private java.sql.Timestamp createdAt;
   private java.sql.Timestamp updatedAt;
 
+  public MessageDAO(long discIdMessage, String messageText, long idUser, long idServ) {
+    this.discIdMessage = discIdMessage;
+    this.messageText = messageText;
+    this.idUser = idUser;
+    this.idServ = idServ;
+  }
+
+  public MessageDAO() {
+  }
 
   public long getDiscIdMessage() {
     return discIdMessage;

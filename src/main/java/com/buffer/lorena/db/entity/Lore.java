@@ -1,6 +1,7 @@
-package com.buffer.lorena.entity;
+package com.buffer.lorena.db.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -9,6 +10,7 @@ import javax.persistence.Table;
 public class Lore {
 
   @Id
+  @GeneratedValue
   private long idLore;
   private long loreMessageId;
   private String loreStatus;
@@ -17,6 +19,14 @@ public class Lore {
   private java.sql.Timestamp updatedAt;
   private long idUser;
 
+  public Lore(long loreMessageId, long discIdServer, long idUser) {
+    this.loreMessageId = loreMessageId;
+    this.discIdServer = discIdServer;
+    this.idUser = idUser;
+  }
+
+  public Lore() {
+  }
 
   public long getIdLore() {
     return idLore;

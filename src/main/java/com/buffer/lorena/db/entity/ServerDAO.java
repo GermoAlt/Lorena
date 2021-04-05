@@ -1,20 +1,31 @@
-package com.buffer.lorena.entity;
+package com.buffer.lorena.db.entity;
+
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "servers")
-public class Server {
+public class ServerDAO {
   @Id
+  @GeneratedValue
   private long idServer;
   private String servName;
   private long discIdServer;
   private java.sql.Timestamp createdAt;
   private java.sql.Timestamp updatedAt;
-  private double userVoteThreshold;
+  private int userVoteThreshold;
 
+  public ServerDAO(String servName, long discIdServer) {
+    this.servName = servName;
+    this.discIdServer = discIdServer;
+  }
+
+  public ServerDAO() {
+
+  }
 
   public long getIdServer() {
     return idServer;
@@ -61,11 +72,11 @@ public class Server {
   }
 
 
-  public double getUserVoteThreshold() {
+  public int getUserVoteThreshold() {
     return userVoteThreshold;
   }
 
-  public void setUserVoteThreshold(double userVoteThreshold) {
+  public void setUserVoteThreshold(int userVoteThreshold) {
     this.userVoteThreshold = userVoteThreshold;
   }
 

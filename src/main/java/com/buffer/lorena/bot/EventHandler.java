@@ -32,6 +32,5 @@ public class EventHandler {
         api.addMessageCreateListener(this.messageHandler);
         api.addReactionAddListener(this.reactionHandler);
         api.addReactionRemoveListener(this.reactionHandler);
-        api.addReactionRemoveAllListener(this.reactionHandler);
     }
 }
