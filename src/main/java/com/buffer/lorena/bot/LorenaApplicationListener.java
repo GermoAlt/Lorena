@@ -14,17 +14,14 @@ public class LorenaApplicationListener implements ApplicationListener<Applicatio
 
     Logger logger = LogManager.getLogger(LorenaApplicationListener.class);
     @Autowired
-    MessageHandler messageHandler;
-    @Value("${lorena.token}")
-    String token;
+    EventHandler eventHandler;
 
-    public LorenaApplicationListener(MessageHandler messageHandler) {
-        this.messageHandler = messageHandler;
+    public LorenaApplicationListener(EventHandler eventHandler) {
+        this.eventHandler = eventHandler;
     }
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
         logger.info("ITS ALIVE!");
-        messageHandler.init(token);
     }
 }
