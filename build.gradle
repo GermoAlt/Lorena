@@ -28,6 +28,15 @@ dependencies {
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	//javacord
+	implementation 'org.javacord:javacord:3.2.0'
+
+	//log4j
+	runtimeOnly 'org.apache.logging.log4j:log4j-core:2.11.0'
+
+	//dotenv
+	compile 'io.github.cdimascio:dotenv-java:2.2.0'
 }
 
 test {
