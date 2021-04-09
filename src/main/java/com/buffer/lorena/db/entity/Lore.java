@@ -1,93 +1,79 @@
 package com.buffer.lorena.db.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
+/**
+ * The type Lore.
+ */
 @Entity
-@Table(name = "lores")
+@Table(name = "Lore")
 public class Lore {
 
-  @Id
-  @GeneratedValue
-  private long idLore;
-  private long loreMessageId;
-  private String loreStatus;
-  private long discIdServer;
+  @EmbeddedId
+  private LoreId loreId;
   private java.sql.Timestamp createdAt;
   private java.sql.Timestamp updatedAt;
-  private long idUser;
 
-  public Lore(long loreMessageId, long discIdServer, long idUser) {
-    this.loreMessageId = loreMessageId;
-    this.discIdServer = discIdServer;
-    this.idUser = idUser;
-  }
-
+  /**
+   * Instantiates a new Lore.
+   */
   public Lore() {
   }
 
-  public long getIdLore() {
-    return idLore;
+  /**
+   * Instantiates a new Lore.
+   *
+   * @param idServer  the id server
+   * @param idUser    the id user
+   * @param idMessage the id message
+   */
+  public Lore(long idServer, long idUser, long idMessage) {
+    this.loreId = new LoreId(idServer, idUser, idMessage);
   }
 
-  public void setIdLore(long idLore) {
-    this.idLore = idLore;
+  /**
+   * Gets id server.
+   *
+   * @return the id server
+   */
+  public long getIdServer() {
+    return this.loreId.getIdServer();
   }
 
-
-  public long getLoreMessageId() {
-    return loreMessageId;
+  /**
+   * Gets id user.
+   *
+   * @return the id user
+   */
+  public long getIdUser() {
+    return this.loreId.getIdUser();
   }
 
-  public void setLoreMessageId(long loreMessageId) {
-    this.loreMessageId = loreMessageId;
+  /**
+   * Gets id message.
+   *
+   * @return the id message
+   */
+  public long getIdMessage() {
+    return this.loreId.getIdMessage();
   }
 
-
-  public String getLoreStatus() {
-    return loreStatus;
-  }
-
-  public void setLoreStatus(String loreStatus) {
-    this.loreStatus = loreStatus;
-  }
-
-
-  public long getDiscIdServer() {
-    return discIdServer;
-  }
-
-  public void setDiscIdServer(long discIdServer) {
-    this.discIdServer = discIdServer;
-  }
-
-
+  /**
+   * Gets created at.
+   *
+   * @return the created at
+   */
   public java.sql.Timestamp getCreatedAt() {
     return createdAt;
   }
 
-  public void setCreatedAt(java.sql.Timestamp createdAt) {
-    this.createdAt = createdAt;
-  }
-
-
+  /**
+   * Gets updated at.
+   *
+   * @return the updated at
+   */
   public java.sql.Timestamp getUpdatedAt() {
     return updatedAt;
-  }
-
-  public void setUpdatedAt(java.sql.Timestamp updatedAt) {
-    this.updatedAt = updatedAt;
-  }
-
-
-  public long getIdUser() {
-    return idUser;
-  }
-
-  public void setIdUser(long idUser) {
-    this.idUser = idUser;
   }
 
 }

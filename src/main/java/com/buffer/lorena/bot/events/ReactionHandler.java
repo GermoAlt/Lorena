@@ -8,11 +8,19 @@ import org.javacord.api.listener.message.reaction.ReactionRemoveListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * The type Reaction handler.
+ */
 @Component
 public class ReactionHandler implements ReactionAddListener, ReactionRemoveListener {
 
     private LorenaService lorenaService;
 
+    /**
+     * Instantiates a new Reaction handler.
+     *
+     * @param lorenaService the lorena service
+     */
     @Autowired
     public ReactionHandler(LorenaService lorenaService) {
         this.lorenaService = lorenaService;

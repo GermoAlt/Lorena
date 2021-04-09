@@ -1,70 +1,111 @@
 package com.buffer.lorena.db.entity;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * The type User dao.
+ */
 @Entity
-@Table(name = "users")
-public class UserDAO {
+@Table(name = "User")
+public class UserDAO extends BaseEntity {
+
   @Id
-  @GeneratedValue
   private long idUser;
-  private String userName;
-  private long discIdUser;
+  private String name;
   private java.sql.Timestamp createdAt;
   private java.sql.Timestamp updatedAt;
 
-  public UserDAO(String userName, long discIdUser) {
-    this.userName = userName;
-    this.discIdUser = discIdUser;
+    /**
+     * Instantiates a new User dao.
+     */
+    public UserDAO() {
   }
 
-  public UserDAO() {
+    /**
+     * Instantiates a new User dao.
+     *
+     * @param idUser the id user
+     * @param name   the name
+     */
+    public UserDAO(long idUser, String name) {
+    this.idUser = idUser;
+    this.name = name;
   }
 
-  public long getIdUser() {
+    /**
+     * Gets id user.
+     *
+     * @return the id user
+     */
+    public long getIdUser() {
     return idUser;
   }
 
-  public void setIdUser(long idUser) {
+    /**
+     * Sets id user.
+     *
+     * @param idUser the id user
+     */
+    public void setIdUser(long idUser) {
     this.idUser = idUser;
   }
 
 
-  public String getUserName() {
-    return userName;
+    /**
+     * Gets name.
+     *
+     * @return the name
+     */
+    public String getName() {
+    return name;
   }
 
-  public void setUserName(String userName) {
-    this.userName = userName;
+    /**
+     * Sets name.
+     *
+     * @param name the name
+     */
+    public void setName(String name) {
+    this.name = name;
   }
 
 
-  public long getDiscIdUser() {
-    return discIdUser;
-  }
-
-  public void setDiscIdUser(long discIdUser) {
-    this.discIdUser = discIdUser;
-  }
-
-
-  public java.sql.Timestamp getCreatedAt() {
+    /**
+     * Gets created at.
+     *
+     * @return the created at
+     */
+    public java.sql.Timestamp getCreatedAt() {
     return createdAt;
   }
 
-  public void setCreatedAt(java.sql.Timestamp createdAt) {
+    /**
+     * Sets created at.
+     *
+     * @param createdAt the created at
+     */
+    public void setCreatedAt(java.sql.Timestamp createdAt) {
     this.createdAt = createdAt;
   }
 
 
-  public java.sql.Timestamp getUpdatedAt() {
+    /**
+     * Gets updated at.
+     *
+     * @return the updated at
+     */
+    public java.sql.Timestamp getUpdatedAt() {
     return updatedAt;
   }
 
-  public void setUpdatedAt(java.sql.Timestamp updatedAt) {
+    /**
+     * Sets updated at.
+     *
+     * @param updatedAt the updated at
+     */
+    public void setUpdatedAt(java.sql.Timestamp updatedAt) {
     this.updatedAt = updatedAt;
   }
 

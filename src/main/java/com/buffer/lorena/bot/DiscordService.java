@@ -9,14 +9,23 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
+/**
+ * The type Discord service.
+ */
 @Component
 public class DiscordService {
     private final Logger logger = LogManager.getLogger(DiscordService.class);
 
+    /**
+     * The Token.
+     */
     @Value("${lorena.token}")
     String token;
     private DiscordApi discordApi;
 
+    /**
+     * Login.
+     */
     @PostConstruct
     public void login(){
         logger.info(token);

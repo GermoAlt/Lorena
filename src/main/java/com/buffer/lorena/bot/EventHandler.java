@@ -11,14 +11,36 @@ import org.javacord.api.listener.message.MessageCreateListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * The type Event handler.
+ */
 @Component
 public class EventHandler {
+    /**
+     * The Logger.
+     */
     Logger logger = LogManager.getLogger(EventHandler.class);
 
+    /**
+     * The Discord service.
+     */
     DiscordService discordService;
+    /**
+     * The Message handler.
+     */
     MessageHandler messageHandler;
+    /**
+     * The Reaction handler.
+     */
     ReactionHandler reactionHandler;
 
+    /**
+     * Instantiates a new Event handler.
+     *
+     * @param discordService  the discord service
+     * @param messageHandler  the message handler
+     * @param reactionHandler the reaction handler
+     */
     @Autowired
     public EventHandler(DiscordService discordService, MessageHandler messageHandler, ReactionHandler reactionHandler) {
         this.discordService = discordService;

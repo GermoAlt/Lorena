@@ -9,22 +9,43 @@ import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
 import org.springframework.stereotype.Service;
 
+/**
+ * The type Lorena service.
+ */
 @Service
 public class LorenaService {
     private final LorenaConverter lorenaConverter;
     private final LorenaRepository lorenaRepository;
 
+    /**
+     * Instantiates a new Lorena service.
+     *
+     * @param lorenaConverter  the lorena converter
+     * @param lorenaRepository the lorena repository
+     */
     public LorenaService(LorenaConverter lorenaConverter, LorenaRepository lorenaRepository) {
         this.lorenaConverter = lorenaConverter;
         this.lorenaRepository = lorenaRepository;
     }
 
+    /**
+     * Insert lore.
+     *
+     * @param user    the user
+     * @param server  the server
+     * @param message the message
+     */
     public void insertLore(User user, Server server, Message message){
         Lore lore = this.lorenaConverter.convertLore(user, server, message);
-        lore.setLoreStatus("ACCEPTED");//TODO: rework lore logic, remove status in DB
-        this.lorenaRepository.insert(lore);
+        this.lorenaRepository.save(lore);
     }
 
+    /**
+     * Change server user vote threshold.
+     *
+     * @param server            the server
+     * @param userVoteThreshold the user vote threshold
+     */
     public void changeServerUserVoteThreshold(Server server, int userVoteThreshold){
         ServerDAO serverDAO = this.lorenaConverter.convertServer(server);
         serverDAO.setUserVoteThreshold(userVoteThreshold);

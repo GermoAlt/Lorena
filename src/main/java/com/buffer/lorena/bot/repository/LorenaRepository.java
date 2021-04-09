@@ -1,26 +1,14 @@
 package com.buffer.lorena.bot.repository;
 
+import com.buffer.lorena.db.entity.BaseEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-
+/**
+ * The interface Lorena repository.
+ *
+ * @param <T> the type parameter
+ */
 @Repository
-public class LorenaRepository{
-    private final EntityManager entityManager;
-
-    public LorenaRepository(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
-
-    public void save(Object entity){
-        entityManager.merge(entity);
-    }
-
-    public Object getById(Object o, Long id){
-        return entityManager.find(o.getClass(), id);
-    }
-
-    public void insert(Object o){
-        entityManager.persist(o);
-    }
+public interface LorenaRepository<T extends BaseEntity> extends JpaRepository<T, Long> {
 }
