@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class MessageHandler implements MessageCreateListener {
-    private final Logger logger = LogManager.getLogger("MessageHandler");
+    private final Logger logger = LogManager.getLogger(MessageHandler.class);
 
     private LorenaService lorenaService;
 
@@ -35,7 +35,7 @@ public class MessageHandler implements MessageCreateListener {
 
     @Override
     public void onMessageCreate(MessageCreateEvent event) {
-        logger.info("message received: " + event.getMessageContent());
+        logger.info("message received: {}", event.getMessageContent());
         String[] parsedMessage = event.getMessageContent().split(" ");
         if (parsedMessage[0].equalsIgnoreCase("!lore")) {
             switch (parsedMessage[1]){
@@ -43,12 +43,14 @@ public class MessageHandler implements MessageCreateListener {
                     event.getChannel().sendMessage("Pong!");
                     break;
                 case "votes":
-                    try{
-                        int uvt = Integer.parseInt(parsedMessage[2]);
-                        this.lorenaService.changeServerUserVoteThreshold(event.getServer().get(), uvt);
-                        event.addReactionsToMessage("✅");
-                    } catch (Exception e) {
-                        event.addReactionsToMessage("❌");
+                    if(event.getMessageAuthor().isServerAdmin()) {
+                        try {
+                            int uvt = Integer.parseInt(parsedMessage[2]);
+                            this.lorenaService.changeServerUserVoteThreshold(event.getServer().get(), uvt);
+                            event.addReactionsToMessage("✅");
+                        } catch (Exception e) {
+                            event.addReactionsToMessage("❌");
+                        }
                     }
                     break;
                 default:
