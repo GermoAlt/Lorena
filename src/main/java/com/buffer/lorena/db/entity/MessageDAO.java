@@ -1,28 +1,34 @@
 package com.buffer.lorena.db.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.sql.Timestamp;
+import java.time.Instant;
 
 /**
  * The type Message dao.
  */
 @Entity
 @Table(name = "Message")
-public class MessageDAO extends BaseEntity {
+public class MessageDAO {
 
   @Id
   private long idMessage;
   private String messageText;
   private long idUser;
   private long idServ;
+  @Column(name = "createdAt")
   private java.sql.Timestamp createdAt;
+  @Column(name = "updatedAt")
   private java.sql.Timestamp updatedAt;
 
     /**
      * Instantiates a new Message dao.
      */
     public MessageDAO() {
+      this.createdAt = Timestamp.from(Instant.now());
   }
 
     /**
@@ -38,6 +44,7 @@ public class MessageDAO extends BaseEntity {
     this.messageText = messageText;
     this.idUser = idUser;
     this.idServ = idServ;
+    this.createdAt = Timestamp.from(Instant.now());
   }
 
     /**

@@ -1,26 +1,32 @@
 package com.buffer.lorena.db.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.sql.Timestamp;
+import java.time.Instant;
 
 /**
  * The type User dao.
  */
 @Entity
 @Table(name = "User")
-public class UserDAO extends BaseEntity {
+public class UserDAO {
 
   @Id
   private long idUser;
   private String name;
+  @Column(name = "createdAt")
   private java.sql.Timestamp createdAt;
+  @Column(name = "updatedAt")
   private java.sql.Timestamp updatedAt;
 
     /**
      * Instantiates a new User dao.
      */
-    public UserDAO() {
+  public UserDAO() {
+    this.createdAt = Timestamp.from(Instant.now());
   }
 
     /**
@@ -29,9 +35,10 @@ public class UserDAO extends BaseEntity {
      * @param idUser the id user
      * @param name   the name
      */
-    public UserDAO(long idUser, String name) {
+  public UserDAO(long idUser, String name) {
     this.idUser = idUser;
     this.name = name;
+    this.createdAt = Timestamp.from(Instant.now());
   }
 
     /**
@@ -39,7 +46,7 @@ public class UserDAO extends BaseEntity {
      *
      * @return the id user
      */
-    public long getIdUser() {
+  public long getIdUser() {
     return idUser;
   }
 
@@ -48,7 +55,7 @@ public class UserDAO extends BaseEntity {
      *
      * @param idUser the id user
      */
-    public void setIdUser(long idUser) {
+  public void setIdUser(long idUser) {
     this.idUser = idUser;
   }
 
@@ -58,7 +65,7 @@ public class UserDAO extends BaseEntity {
      *
      * @return the name
      */
-    public String getName() {
+  public String getName() {
     return name;
   }
 
@@ -67,7 +74,7 @@ public class UserDAO extends BaseEntity {
      *
      * @param name the name
      */
-    public void setName(String name) {
+  public void setName(String name) {
     this.name = name;
   }
 
@@ -77,7 +84,7 @@ public class UserDAO extends BaseEntity {
      *
      * @return the created at
      */
-    public java.sql.Timestamp getCreatedAt() {
+  public java.sql.Timestamp getCreatedAt() {
     return createdAt;
   }
 
@@ -86,7 +93,7 @@ public class UserDAO extends BaseEntity {
      *
      * @param createdAt the created at
      */
-    public void setCreatedAt(java.sql.Timestamp createdAt) {
+  public void setCreatedAt(java.sql.Timestamp createdAt) {
     this.createdAt = createdAt;
   }
 
@@ -96,7 +103,7 @@ public class UserDAO extends BaseEntity {
      *
      * @return the updated at
      */
-    public java.sql.Timestamp getUpdatedAt() {
+  public java.sql.Timestamp getUpdatedAt() {
     return updatedAt;
   }
 
@@ -105,7 +112,7 @@ public class UserDAO extends BaseEntity {
      *
      * @param updatedAt the updated at
      */
-    public void setUpdatedAt(java.sql.Timestamp updatedAt) {
+  public void setUpdatedAt(java.sql.Timestamp updatedAt) {
     this.updatedAt = updatedAt;
   }
 

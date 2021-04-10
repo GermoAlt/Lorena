@@ -1,6 +1,8 @@
 package com.buffer.lorena.db.entity;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
+import java.time.Instant;
 
 /**
  * The type Lore.
@@ -11,7 +13,9 @@ public class Lore {
 
   @EmbeddedId
   private LoreId loreId;
+  @Column(name = "createdAt")
   private java.sql.Timestamp createdAt;
+  @Column(name = "updatedAt")
   private java.sql.Timestamp updatedAt;
 
   /**
@@ -23,12 +27,22 @@ public class Lore {
   /**
    * Instantiates a new Lore.
    *
+   * @param loreId the lore id
+   */
+  public Lore(LoreId loreId) {
+    this.loreId = loreId;
+  }
+
+  /**
+   * Instantiates a new Lore.
+   *
    * @param idServer  the id server
    * @param idUser    the id user
    * @param idMessage the id message
    */
   public Lore(long idServer, long idUser, long idMessage) {
     this.loreId = new LoreId(idServer, idUser, idMessage);
+    this.createdAt = Timestamp.from(Instant.now());
   }
 
   /**

@@ -8,13 +8,17 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-@EnableJpaRepositories(basePackages = "com.buffer.lorena.db.entity")
-@ComponentScan("com.buffer.lorena.db")
+/**
+ * The type Lorena application.
+ */
 @SpringBootApplication
 public class LorenaApplication {
-	public static void main(String[] args) {
+    /**
+     * The entry point of application.
+     *
+     * @param args the input arguments
+     */
+    public static void main(String[] args) {
 		SpringApplication.run(LorenaApplication.class, args);
-		System.out.println("\n ITS ALIVE! \n");
 	}
-
 }

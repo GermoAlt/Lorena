@@ -1,8 +1,8 @@
 package com.buffer.lorena.bot.service;
 
 import com.buffer.lorena.bot.converter.LorenaConverter;
-import com.buffer.lorena.bot.repository.LorenaRepository;
-import com.buffer.lorena.db.entity.Lore;
+import com.buffer.lorena.bot.repository.ServerRepository;
+import com.buffer.lorena.bot.repository.UserRepository;
 import com.buffer.lorena.db.entity.ServerDAO;
 import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.server.Server;
@@ -15,17 +15,21 @@ import org.springframework.stereotype.Service;
 @Service
 public class LorenaService {
     private final LorenaConverter lorenaConverter;
-    private final LorenaRepository lorenaRepository;
+    private final UserRepository userRepository;
+    private final ServerRepository serverRepository;
 
     /**
      * Instantiates a new Lorena service.
      *
      * @param lorenaConverter  the lorena converter
-     * @param lorenaRepository the lorena repository
+     * @param userRepository   the lorena repository
+     * @param serverRepository the server repository
      */
-    public LorenaService(LorenaConverter lorenaConverter, LorenaRepository lorenaRepository) {
+    public LorenaService(LorenaConverter lorenaConverter, UserRepository userRepository,
+                         ServerRepository serverRepository) {
         this.lorenaConverter = lorenaConverter;
-        this.lorenaRepository = lorenaRepository;
+        this.userRepository = userRepository;
+        this.serverRepository = serverRepository;
     }
 
     /**
@@ -36,8 +40,7 @@ public class LorenaService {
      * @param message the message
      */
     public void insertLore(User user, Server server, Message message){
-        Lore lore = this.lorenaConverter.convertLore(user, server, message);
-        this.lorenaRepository.save(lore);
+        this.lorenaConverter.convertLore(user, server, message);
     }
 
     /**
@@ -49,6 +52,6 @@ public class LorenaService {
     public void changeServerUserVoteThreshold(Server server, int userVoteThreshold){
         ServerDAO serverDAO = this.lorenaConverter.convertServer(server);
         serverDAO.setUserVoteThreshold(userVoteThreshold);
-        this.lorenaRepository.save(serverDAO);
+        this.serverRepository.save(serverDAO);
     }
 }

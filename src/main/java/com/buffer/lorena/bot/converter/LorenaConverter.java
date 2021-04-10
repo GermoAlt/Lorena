@@ -1,6 +1,9 @@
 package com.buffer.lorena.bot.converter;
 
-import com.buffer.lorena.bot.repository.LorenaRepository;
+import com.buffer.lorena.bot.repository.LoreRepository;
+import com.buffer.lorena.bot.repository.MessageRepository;
+import com.buffer.lorena.bot.repository.ServerRepository;
+import com.buffer.lorena.bot.repository.UserRepository;
 import com.buffer.lorena.db.entity.*;
 import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.server.Server;
@@ -8,6 +11,8 @@ import org.javacord.api.entity.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Optional;
 
 /**
@@ -16,16 +21,26 @@ import java.util.Optional;
 @Component
 public class LorenaConverter {
 
-    private LorenaRepository lorenaRepository;
+    private final ServerRepository serverRepository;
+    private final UserRepository userRepository;
+    private final MessageRepository messageRepository;
+    private final LoreRepository loreRepository;
+
 
     /**
      * Instantiates a new Lorena converter.
      *
-     * @param lorenaRepository the lorena repository
+     * @param serverRepository  the server repository
+     * @param userRepository    the user repository
+     * @param messageRepository the message repository
+     * @param loreRepository    the lore repository
      */
-    @Autowired
-    public LorenaConverter(LorenaRepository lorenaRepository) {
-        this.lorenaRepository = lorenaRepository;
+    public LorenaConverter(ServerRepository serverRepository, UserRepository userRepository,
+                           MessageRepository messageRepository, LoreRepository loreRepository) {
+        this.serverRepository = serverRepository;
+        this.userRepository = userRepository;
+        this.messageRepository = messageRepository;
+        this.loreRepository = loreRepository;
     }
 
     /**
@@ -35,12 +50,13 @@ public class LorenaConverter {
      * @return the user dao
      */
     public UserDAO convertUser(User user){
-        Optional<UserDAO> userDAO = lorenaRepository.findById(user.getId());
-        if(!userDAO.isPresent()) {
+        Optional<UserDAO> userDAO = userRepository.findById(user.getId());
+        if(userDAO.isEmpty()) {
             userDAO = Optional.of(new UserDAO(user.getId(), user.getDiscriminatedName()));
-            lorenaRepository.save(userDAO);
+        } else {
+            userDAO.get().setUpdatedAt(Timestamp.from(Instant.now()));
         }
-        return userDAO.get();
+        return Optional.of(userRepository.save(userDAO.get())).get();
     }
 
     /**
@@ -50,12 +66,13 @@ public class LorenaConverter {
      * @return the server dao
      */
     public ServerDAO convertServer(Server server){
-        Optional<ServerDAO> serverDAO = lorenaRepository.findById(server.getId());
-        if(!serverDAO.isPresent()) {
+        Optional<ServerDAO> serverDAO = serverRepository.findById(server.getId());
+        if(serverDAO.isEmpty()) {
             serverDAO = Optional.of(new ServerDAO(server.getId(), server.getName()));
-            lorenaRepository.save(serverDAO.get());
+        } else {
+            serverDAO.get().setUpdatedAt(Timestamp.from(Instant.now()));
         }
-        return serverDAO.get();
+        return Optional.of(serverRepository.save(serverDAO.get())).get();
 
     }
 
@@ -66,14 +83,15 @@ public class LorenaConverter {
      * @return the message dao
      */
     public MessageDAO convertMessage(Message message){
-        Optional<MessageDAO> messageDAO = lorenaRepository.findById(message.getId());
-        if(!messageDAO.isPresent()){
+        Optional<MessageDAO> messageDAO = messageRepository.findById(message.getId());
+        if(messageDAO.isEmpty()){
             messageDAO = Optional.of(new MessageDAO(message.getId(), message.getContent(),
                     message.getUserAuthor().get().getId(),
                     message.getServer().get().getId()));
-            lorenaRepository.save(messageDAO.get());
+        } else {
+            messageDAO.get().setUpdatedAt(Timestamp.from(Instant.now()));
         }
-        return messageDAO.get();
+        return Optional.of(messageRepository.save(messageDAO.get())).get();
     }
 
     /**
@@ -85,8 +103,15 @@ public class LorenaConverter {
      * @return the lore
      */
     public Lore convertLore(User user, Server server, Message message){
-        Lore lore = new Lore(message.getId(), server.getId(), user.getId());
-        lorenaRepository.save(lore);
-        return lore;
+        LoreId id = new LoreId(
+                convertMessage(message).getIdMessage(),
+                convertServer(server).getIdServer(),
+                convertUser(user).getIdUser());
+        Optional<Lore> lore = loreRepository.findById(id);
+        if(lore.isEmpty()){
+            lore = Optional.of(new Lore(id));
+            lore = Optional.of(loreRepository.save(lore.get()));
+        }
+        return lore.get();
     }
 }
