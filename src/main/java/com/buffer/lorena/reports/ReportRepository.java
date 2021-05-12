@@ -1,6 +1,6 @@
 package com.buffer.lorena.reports;
 
-import com.buffer.lorena.db.entity.Lore;
+import com.buffer.lorena.bot.entity.Lore;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

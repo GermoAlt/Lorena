@@ -1,6 +1,6 @@
 package com.buffer.lorena.bot.repository;
 
-import com.buffer.lorena.db.entity.UserDAO;
+import com.buffer.lorena.bot.entity.UserDAO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

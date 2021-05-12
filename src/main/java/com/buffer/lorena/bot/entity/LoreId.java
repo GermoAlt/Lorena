@@ -1,7 +1,8 @@
-package com.buffer.lorena.db.entity;
+package com.buffer.lorena.bot.entity;
 
 import javax.persistence.Embeddable;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * The type Lore id.
@@ -29,6 +30,30 @@ public class LoreId implements Serializable {
         this.idServer = idServer;
         this.idUser = idUser;
         this.idMessage = idMessage;
+    }
+
+    /**
+     * Equals boolean.
+     *
+     * @param o the o
+     * @return the boolean
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof LoreId)) return false;
+        LoreId loreId = (LoreId) o;
+        return getIdServer() == loreId.getIdServer() && getIdUser() == loreId.getIdUser() && getIdMessage() == loreId.getIdMessage();
+    }
+
+    /**
+     * Hash code int.
+     *
+     * @return the int
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(getIdServer(), getIdUser(), getIdMessage());
     }
 
     /**

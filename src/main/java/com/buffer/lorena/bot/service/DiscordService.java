@@ -1,4 +1,4 @@
-package com.buffer.lorena.bot;
+package com.buffer.lorena.bot.service;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

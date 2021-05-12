@@ -1,7 +1,6 @@
-package com.buffer.lorena.bot;
+package com.buffer.lorena.bot.events;
 
-import com.buffer.lorena.bot.events.MessageHandler;
-import com.buffer.lorena.bot.events.ReactionHandler;
+import com.buffer.lorena.bot.service.DiscordService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.javacord.api.DiscordApi;

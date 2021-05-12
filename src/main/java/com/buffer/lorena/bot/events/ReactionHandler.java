@@ -43,7 +43,7 @@ public class ReactionHandler implements ReactionAddListener, ReactionRemoveListe
             case "⛓":
                 this.lorenaService.handleSendToGulagReaction(event);
                 break;
-            case "🗝":
+            case "":
                 this.lorenaService.handleFreeFromGulagReaction(event);
                 break;
         }

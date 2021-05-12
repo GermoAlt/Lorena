@@ -1,6 +1,6 @@
 package com.buffer.lorena.reports;
 
-import com.buffer.lorena.db.entity.Lore;
+import com.buffer.lorena.bot.entity.Lore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -4,11 +4,10 @@ import com.buffer.lorena.bot.repository.LoreRepository;
 import com.buffer.lorena.bot.repository.MessageRepository;
 import com.buffer.lorena.bot.repository.ServerRepository;
 import com.buffer.lorena.bot.repository.UserRepository;
-import com.buffer.lorena.db.entity.*;
+import com.buffer.lorena.bot.entity.*;
 import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
@@ -95,7 +94,7 @@ public class LorenaConverter {
     }
 
     /**
-     * Convert lore lore.
+     * Convert lore.
      *
      * @param user    the user
      * @param server  the server

@@ -1,5 +1,8 @@
 package com.buffer.lorena.bot.events;
 
+import com.buffer.lorena.bot.entity.MessageDAO;
+import com.buffer.lorena.bot.repository.LoreRepository;
+import com.buffer.lorena.bot.repository.MessageRepository;
 import com.buffer.lorena.bot.service.LorenaService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -7,6 +10,9 @@ import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.listener.message.MessageCreateListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Locale;
+import java.util.Random;
 
 /**
  * The type Message handler.
@@ -16,6 +22,9 @@ public class MessageHandler implements MessageCreateListener {
     private final Logger logger = LogManager.getLogger(MessageHandler.class);
 
     private LorenaService lorenaService;
+    private LoreRepository loreRepository;
+    private MessageRepository messageRepository;
+    private static final String LORENA_TEXT = "lorena";
 
     /**
      * Instantiates a new Message handler.
@@ -26,13 +35,22 @@ public class MessageHandler implements MessageCreateListener {
     /**
      * Instantiates a new Message handler.
      *
-     * @param lorenaService the lorena service
+     * @param lorenaService     the lorena service
+     * @param loreRepository    the lore repository
+     * @param messageRepository the message repository
      */
     @Autowired
-    public MessageHandler(LorenaService lorenaService) {
+    public MessageHandler(LorenaService lorenaService, LoreRepository loreRepository, MessageRepository messageRepository) {
         this.lorenaService = lorenaService;
+        this.loreRepository = loreRepository;
+        this.messageRepository = messageRepository;
     }
 
+    /**
+     * On message create.
+     *
+     * @param event the event
+     */
     @Override
     public void onMessageCreate(MessageCreateEvent event) {
         logger.info("message received: {}", event.getMessageContent());
@@ -56,7 +74,12 @@ public class MessageHandler implements MessageCreateListener {
                 default:
                     event.getChannel().sendMessage("fuck off");
             }
-
+        } else if(event.getMessageContent().toLowerCase(Locale.ROOT).contains(LORENA_TEXT)){
+            Random rand = new Random();
+            long serverId = event.getServer().get().getId();
+            int totalLoreCount = loreRepository.findTotalLoreCountByIdServer(serverId);
+            MessageDAO m = messageRepository.findById(loreRepository.findAllByIdServer(serverId).get(rand.nextInt(totalLoreCount-1)).getIdMessage()).get();
+            event.getChannel().sendMessage(m.getMessageText());
         }
     }
 }

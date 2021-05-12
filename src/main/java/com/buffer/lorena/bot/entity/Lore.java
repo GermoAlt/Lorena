@@ -1,4 +1,4 @@
-package com.buffer.lorena.db.entity;
+package com.buffer.lorena.bot.entity;
 
 import javax.persistence.*;
 import java.sql.Timestamp;

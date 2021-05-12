@@ -2,8 +2,7 @@ package com.buffer.lorena.bot.service;
 
 import com.buffer.lorena.bot.converter.LorenaConverter;
 import com.buffer.lorena.bot.repository.ServerRepository;
-import com.buffer.lorena.bot.repository.UserRepository;
-import com.buffer.lorena.db.entity.ServerDAO;
+import com.buffer.lorena.bot.entity.ServerDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.javacord.api.entity.message.Message;
@@ -14,6 +13,7 @@ import org.javacord.api.event.message.reaction.ReactionAddEvent;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 /**
@@ -24,21 +24,18 @@ public class LorenaService {
     private final Logger logger = LogManager.getLogger(LorenaService.class);
 
     private final LorenaConverter lorenaConverter;
-    private final UserRepository userRepository;
     private final ServerRepository serverRepository;
 
     /**
      * Instantiates a new Lorena service.
      *
      * @param lorenaConverter  the lorena converter
-     * @param userRepository   the lorena repository
      * @param serverRepository the server repository
      */
-    public LorenaService(LorenaConverter lorenaConverter, UserRepository userRepository,
-                         ServerRepository serverRepository) {
+    public LorenaService(LorenaConverter lorenaConverter, ServerRepository serverRepository) {
         this.lorenaConverter = lorenaConverter;
-        this.userRepository = userRepository;
         this.serverRepository = serverRepository;
+
     }
 
     /**
@@ -64,22 +61,47 @@ public class LorenaService {
         this.serverRepository.save(serverDAO);
     }
 
+    /**
+     * Handle lore reaction.
+     *
+     * @param event the event
+     */
     public void handleLoreReaction(ReactionAddEvent event) {
-        Reaction reaction = event.requestReaction().join().get();
-        List<Reaction> list =  reaction.getMessage().getReactions().stream()
-                .filter(r -> r.getEmoji().equalsEmoji("📜")).collect(Collectors.toList());
-        ServerDAO server = this.lorenaConverter.convertServer(reaction.getMessage().getServer().get());
-        if(list.size() >= server.getUserVoteThreshold()) {
-            this.insertLore(reaction.getMessage().getUserAuthor().get(),
-                    reaction.getMessage().getServer().get(),
-                    reaction.getMessage());
+        try {
+            if (!event.requestMessage().get().getAuthor().isBotUser()) {
+                Reaction reaction = event.requestReaction().join().get();
+                List<Reaction> list = reaction.getMessage().getReactions().stream()
+                        .filter(r -> r.getEmoji().equalsEmoji("📜")).collect(Collectors.toList());
+                ServerDAO server = this.lorenaConverter.convertServer(reaction.getMessage().getServer().get());
+                if (list.size() >= server.getUserVoteThreshold()) {
+                    this.insertLore(reaction.getMessage().getUserAuthor().get(),
+                            reaction.getMessage().getServer().get(),
+                            reaction.getMessage());
+                    event.addReactionsToMessage("🖋");
+                }
+            }
+        }  catch (InterruptedException ie) {
+            logger.error("InterruptedException: ", ie);
+            Thread.currentThread().interrupt();
+        } catch (ExecutionException ee) {
+            logger.error("ExecutionException: ",ee);
         }
     }
 
+    /**
+     * Handle send to gulag reaction.
+     *
+     * @param event the event
+     */
     public void handleSendToGulagReaction(ReactionAddEvent event) {
         logger.error("lol this is not implemented");
     }
 
+    /**
+     * Handle free from gulag reaction.
+     *
+     * @param event the event
+     */
     public void handleFreeFromGulagReaction(ReactionAddEvent event) {
         logger.error("lol this is not implemented");
     }
