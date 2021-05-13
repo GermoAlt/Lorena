@@ -75,7 +75,7 @@ public class MessageHandler implements MessageCreateListener {
                 case "setLoreChannel":
                     if(event.getMessageAuthor().isServerAdmin()) {
                         try {
-                            Long newLoreChannelId = Long.parseLong(parsedMessage[2].substring(2));
+                            Long newLoreChannelId = Long.parseLong(parsedMessage[2].substring(2, parsedMessage[2].length()-1));
                             this.lorenaService.setServerLoreChannel(event.getServer().get(), newLoreChannelId);
                             event.addReactionsToMessage("✅");
                         } catch (Exception e) {

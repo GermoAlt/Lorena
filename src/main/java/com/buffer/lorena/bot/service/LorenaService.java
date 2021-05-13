@@ -5,14 +5,20 @@ import com.buffer.lorena.bot.repository.ServerRepository;
 import com.buffer.lorena.bot.entity.ServerDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.javacord.api.entity.channel.Channel;
 import org.javacord.api.entity.message.Message;
+import org.javacord.api.entity.message.MessageAuthor;
+import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.entity.message.Reaction;
+import org.javacord.api.entity.message.embed.Embed;
+import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.event.message.reaction.ReactionAddEvent;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -100,7 +106,23 @@ public class LorenaService {
     }
 
     private void sendEmbedToLoreBoard(ReactionAddEvent event){
-        logger.error("lol this is not implemented");
+        Channel channel = event.getChannel();
+        Message message = event.getApi().getMessageById(event.getMessageId(), channel.asTextChannel().get()).join();
+        ServerDAO server = this.lorenaConverter.convertServer(message.getServer().get());
+        if(server.getLoreChannel() != null) {
+            MessageAuthor author = message.getAuthor();
+            EmbedBuilder embed = new EmbedBuilder()
+                    .setDescription(message.getContent())
+                    .setAuthor(author.getDiscriminatedName(), null, author.getAvatar())
+                    .setTimestampToNow()
+                    .addInlineField("Original", "**[Jump to Message]("+buildMessageUrl(server.getIdServer(), channel.getId(), message.getId())+")**")
+                    .addInlineField("Channel", "<#"+ channel.getIdAsString()+">")
+                    .setColor(Color.PINK)
+                    .set;
+
+
+            event.getApi().getChannelById(server.getLoreChannel()).get().asTextChannel().get().sendMessage(embed);
+        }
     }
 
     /**
@@ -167,6 +189,14 @@ public class LorenaService {
      */
     public void handleReprocessingReaction(ReactionAddEvent event) {
         this.handleLoreReaction(event);
-        this.sendEmbedToLoreBoard(event);
+    }
+
+    private String buildMessageUrl(Long idServer, Long idChannel, Long idMessage){
+        return "https://discord.com/channels/" +
+                idServer.toString() +
+                "/" +
+                idChannel.toString() +
+                "/" +
+                idMessage.toString();
     }
 }
