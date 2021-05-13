@@ -72,6 +72,17 @@ public class MessageHandler implements MessageCreateListener {
                         }
                     }
                     break;
+                case "setLoreChannel":
+                    if(event.getMessageAuthor().isServerAdmin()) {
+                        try {
+                            Long newLoreChannelId = Long.parseLong(parsedMessage[2].substring(2));
+                            this.lorenaService.setServerLoreChannel(event.getServer().get(), newLoreChannelId);
+                            event.addReactionsToMessage("✅");
+                        } catch (Exception e) {
+                            event.addReactionsToMessage("❌");
+                        }
+                    }
+                    break;
                 default:
                     event.getChannel().sendMessage("fuck off");
             }

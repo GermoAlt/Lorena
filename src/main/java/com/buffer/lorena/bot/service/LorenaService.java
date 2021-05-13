@@ -34,6 +34,7 @@ public class LorenaService {
      *
      * @param lorenaConverter  the lorena converter
      * @param serverRepository the server repository
+     * @param environment      the environment
      */
     public LorenaService(LorenaConverter lorenaConverter, ServerRepository serverRepository, Environment environment) {
         this.lorenaConverter = lorenaConverter;
@@ -75,12 +76,10 @@ public class LorenaService {
                 Reaction reaction = event.requestReaction().join().get();
                 List<Reaction> list = reaction.getMessage().getReactions().stream()
                         .filter(r -> r.getEmoji().equalsEmoji("📜")).collect(Collectors.toList());
-                ServerDAO server = this.lorenaConverter.convertServer(reaction.getMessage().getServer().get());
+                ServerDAO server = this.lorenaConverter.convertServer(event.getServer().get());
                 if (!list.isEmpty() && list.get(0).getCount() >= server.getUserVoteThreshold()) {
-                    this.insertLore(reaction.getMessage().getUserAuthor().get(),
-                            reaction.getMessage().getServer().get(),
-                            reaction.getMessage());
-                    event.addReactionsToMessage("🖋");
+                    this.handleLore(event);
+                    this.sendEmbedToLoreBoard(event);
                 }
             }
         }  catch (InterruptedException ie) {
@@ -89,6 +88,19 @@ public class LorenaService {
         } catch (ExecutionException ee) {
             logger.error("ExecutionException: ",ee);
         }
+    }
+
+    private void handleLore(ReactionAddEvent event){
+        if(!isDevEnvironment()) {
+            this.insertLore(event.getMessageAuthor().get().asUser().get(),
+                    event.getServer().get(),
+                    event.getMessage().get());
+        }
+        event.addReactionsToMessage("🖋");
+    }
+
+    private void sendEmbedToLoreBoard(ReactionAddEvent event){
+        logger.error("lol this is not implemented");
     }
 
     /**
@@ -109,16 +121,52 @@ public class LorenaService {
         logger.error("lol this is not implemented");
     }
 
+    /**
+     * Is dev environment boolean.
+     *
+     * @return the boolean
+     */
     public boolean isDevEnvironment(){
         return Arrays.stream(environment.getActiveProfiles()).anyMatch(env -> env.equalsIgnoreCase("dev"));
     }
 
-    public void handleReprocessingReaction(ReactionAddEvent event) {
-    }
-
+    /**
+     * Handle force lore reaction.
+     *
+     * @param event the event
+     */
     public void handleForceLoreReaction(ReactionAddEvent event) {
+        try {
+            if(event.getApi().getUserById(event.getUserId()).get().isBotOwner()){
+                this.handleLore(event);
+            }
+        }  catch (InterruptedException ie) {
+            logger.error("InterruptedException: ", ie);
+            Thread.currentThread().interrupt();
+        } catch (ExecutionException ee) {
+            logger.error("ExecutionException: ",ee);
+        }
     }
 
-    public void setServerLoreChannel(Server server, String newLoreChannel) {
+    /**
+     * Sets server lore channel.
+     *
+     * @param server         the server
+     * @param newLoreChannel the new lore channel
+     */
+    public void setServerLoreChannel(Server server, Long newLoreChannel) {
+        ServerDAO serverDAO = lorenaConverter.convertServer(server);
+        serverDAO.setLoreChannel(newLoreChannel);
+        this.serverRepository.save(serverDAO);
+    }
+
+    /**
+     * Handle reprocessing.
+     *
+     * @param event the event
+     */
+    public void handleReprocessingReaction(ReactionAddEvent event) {
+        this.handleLoreReaction(event);
+        this.sendEmbedToLoreBoard(event);
     }
 }

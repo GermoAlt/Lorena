@@ -18,6 +18,8 @@ public class ServerDAO {
   private long idServer;
   private String name;
   private Integer userVoteThreshold;
+  @Column(name = "ID_CHANNEL_LOREBOARD")
+  private Long loreChannel;
   @Column(name = "createdAt")
   private java.sql.Timestamp createdAt;
   @Column(name = "updatedAt")
@@ -136,4 +138,21 @@ public class ServerDAO {
     this.updatedAt = updatedAt;
   }
 
+  /**
+   * Gets lore channel.
+   *
+   * @return the lore channel
+   */
+  public Long getLoreChannel() {
+    return loreChannel;
+  }
+
+  /**
+   * Sets lore channel.
+   *
+   * @param loreChannel the lore channel
+   */
+  public void setLoreChannel(Long loreChannel) {
+    this.loreChannel = loreChannel;
+  }
 }
