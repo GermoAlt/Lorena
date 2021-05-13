@@ -20,11 +20,12 @@ import java.util.Random;
 @Component
 public class MessageHandler implements MessageCreateListener {
     private final Logger logger = LogManager.getLogger(MessageHandler.class);
+    private static final String LORENA_TEXT = "lorena";
+    private final Random random = new Random();
 
     private LorenaService lorenaService;
     private LoreRepository loreRepository;
     private MessageRepository messageRepository;
-    private static final String LORENA_TEXT = "lorena";
 
     /**
      * Instantiates a new Message handler.
@@ -74,11 +75,10 @@ public class MessageHandler implements MessageCreateListener {
                 default:
                     event.getChannel().sendMessage("fuck off");
             }
-        } else if(event.getMessageContent().toLowerCase(Locale.ROOT).contains(LORENA_TEXT)){
-            Random rand = new Random();
+        } else if(!lorenaService.isDevEnvironment() && event.getMessageContent().toLowerCase(Locale.ROOT).contains(LORENA_TEXT)){
             long serverId = event.getServer().get().getId();
             int totalLoreCount = loreRepository.findTotalLoreCountByIdServer(serverId);
-            MessageDAO m = messageRepository.findById(loreRepository.findAllByIdServer(serverId).get(rand.nextInt(totalLoreCount-1)).getIdMessage()).get();
+            MessageDAO m = messageRepository.findById(loreRepository.findAllByIdServer(serverId).get(random.nextInt(totalLoreCount-1)).getIdMessage()).get();
             event.getChannel().sendMessage(m.getMessageText());
         }
     }

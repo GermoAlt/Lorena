@@ -10,8 +10,10 @@ import org.javacord.api.entity.message.Reaction;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.event.message.reaction.ReactionAddEvent;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
@@ -25,6 +27,7 @@ public class LorenaService {
 
     private final LorenaConverter lorenaConverter;
     private final ServerRepository serverRepository;
+    private final Environment environment;
 
     /**
      * Instantiates a new Lorena service.
@@ -32,10 +35,10 @@ public class LorenaService {
      * @param lorenaConverter  the lorena converter
      * @param serverRepository the server repository
      */
-    public LorenaService(LorenaConverter lorenaConverter, ServerRepository serverRepository) {
+    public LorenaService(LorenaConverter lorenaConverter, ServerRepository serverRepository, Environment environment) {
         this.lorenaConverter = lorenaConverter;
         this.serverRepository = serverRepository;
-
+        this.environment = environment;
     }
 
     /**
@@ -73,7 +76,7 @@ public class LorenaService {
                 List<Reaction> list = reaction.getMessage().getReactions().stream()
                         .filter(r -> r.getEmoji().equalsEmoji("📜")).collect(Collectors.toList());
                 ServerDAO server = this.lorenaConverter.convertServer(reaction.getMessage().getServer().get());
-                if (list.size() >= server.getUserVoteThreshold()) {
+                if (!list.isEmpty() && list.get(0).getCount() >= server.getUserVoteThreshold()) {
                     this.insertLore(reaction.getMessage().getUserAuthor().get(),
                             reaction.getMessage().getServer().get(),
                             reaction.getMessage());
@@ -104,5 +107,18 @@ public class LorenaService {
      */
     public void handleFreeFromGulagReaction(ReactionAddEvent event) {
         logger.error("lol this is not implemented");
+    }
+
+    public boolean isDevEnvironment(){
+        return Arrays.stream(environment.getActiveProfiles()).anyMatch(env -> env.equalsIgnoreCase("dev"));
+    }
+
+    public void handleReprocessingReaction(ReactionAddEvent event) {
+    }
+
+    public void handleForceLoreReaction(ReactionAddEvent event) {
+    }
+
+    public void setServerLoreChannel(Server server, String newLoreChannel) {
     }
 }
