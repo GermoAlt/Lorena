@@ -6,10 +6,7 @@ import com.buffer.lorena.bot.entity.ServerDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.javacord.api.entity.channel.Channel;
-import org.javacord.api.entity.message.Message;
-import org.javacord.api.entity.message.MessageAuthor;
-import org.javacord.api.entity.message.MessageBuilder;
-import org.javacord.api.entity.message.Reaction;
+import org.javacord.api.entity.message.*;
 import org.javacord.api.entity.message.embed.Embed;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.server.Server;
@@ -85,7 +82,6 @@ public class LorenaService {
                 ServerDAO server = this.lorenaConverter.convertServer(event.getServer().get());
                 if (!list.isEmpty() && list.get(0).getCount() >= server.getUserVoteThreshold()) {
                     this.handleLore(event);
-                    this.sendEmbedToLoreBoard(event);
                 }
             }
         }  catch (InterruptedException ie) {
@@ -102,6 +98,7 @@ public class LorenaService {
                     event.getServer().get(),
                     event.getMessage().get());
         }
+        this.sendEmbedToLoreBoard(event);
         event.addReactionsToMessage("🖋");
     }
 
@@ -118,9 +115,7 @@ public class LorenaService {
                     .addInlineField("Original", "**[Jump to Message]("+buildMessageUrl(server.getIdServer(), channel.getId(), message.getId())+")**")
                     .addInlineField("Channel", "<#"+ channel.getIdAsString()+">")
                     .setColor(Color.PINK)
-                    .set;
-
-
+                    .setImage(message.getAttachments().get(0).getUrl().toString());
             event.getApi().getChannelById(server.getLoreChannel()).get().asTextChannel().get().sendMessage(embed);
         }
     }
