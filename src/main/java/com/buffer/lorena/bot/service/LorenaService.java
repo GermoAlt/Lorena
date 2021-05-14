@@ -1,6 +1,8 @@
 package com.buffer.lorena.bot.service;
 
 import com.buffer.lorena.bot.converter.LorenaConverter;
+import com.buffer.lorena.bot.entity.LoreId;
+import com.buffer.lorena.bot.repository.LoreRepository;
 import com.buffer.lorena.bot.repository.ServerRepository;
 import com.buffer.lorena.bot.entity.ServerDAO;
 import org.apache.logging.log4j.LogManager;
@@ -30,6 +32,7 @@ public class LorenaService {
 
     private final LorenaConverter lorenaConverter;
     private final ServerRepository serverRepository;
+    private final LoreRepository loreRepository;
     private final Environment environment;
 
     /**
@@ -39,10 +42,11 @@ public class LorenaService {
      * @param serverRepository the server repository
      * @param environment      the environment
      */
-    public LorenaService(LorenaConverter lorenaConverter, ServerRepository serverRepository, Environment environment) {
+    public LorenaService(LorenaConverter lorenaConverter, ServerRepository serverRepository, Environment environment, LoreRepository loreRepository) {
         this.lorenaConverter = lorenaConverter;
         this.serverRepository = serverRepository;
         this.environment = environment;
+        this.loreRepository = loreRepository;
     }
 
     /**
@@ -93,12 +97,14 @@ public class LorenaService {
     }
 
     private void handleLore(ReactionAddEvent event){
+        User user = event.getMessageAuthor().get().asUser().get();
+        Server server = event.getServer().get();
+        Message message = event.getMessage().get();
+        boolean isNew = loreRepository.findById(new LoreId(user.getId(), server.getId(), message.getId())).isEmpty();
         if(!isDevEnvironment()) {
-            this.insertLore(event.getMessageAuthor().get().asUser().get(),
-                    event.getServer().get(),
-                    event.getMessage().get());
+            this.insertLore(user, server, message);
         }
-        this.sendEmbedToLoreBoard(event);
+        if(isNew) this.sendEmbedToLoreBoard(event);
         event.addReactionsToMessage("🖋");
     }
 
