@@ -115,7 +115,7 @@ public class LorenaService {
                     .addInlineField("Original", "**[Jump to Message]("+buildMessageUrl(server.getIdServer(), channel.getId(), message.getId())+")**")
                     .addInlineField("Channel", "<#"+ channel.getIdAsString()+">")
                     .setColor(Color.PINK)
-                    .setImage(message.getAttachments().get(0).getUrl().toString());
+                    .setImage(message.getAttachments().isEmpty() ? null : message.getAttachments().get(0).getUrl().toString());
             event.getApi().getChannelById(server.getLoreChannel()).get().asTextChannel().get().sendMessage(embed);
         }
     }
