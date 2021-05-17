@@ -177,15 +177,9 @@ public class LorenaService {
      * @param event the event
      */
     public void handleForceLoreReaction(ReactionAddEvent event) {
-        try {
-            if(event.getApi().getUserById(event.getUserId()).get().isBotOwner()){
-                this.handleLore(event);
-            }
-        }  catch (InterruptedException ie) {
-            logger.error("InterruptedException: ", ie);
-            Thread.currentThread().interrupt();
-        } catch (ExecutionException ee) {
-            logger.error("ExecutionException: ",ee);
+        User user = event.getApi().getUserById(event.getUserId()).join();
+        if(event.getServer().get().isAdmin(user)){
+            this.handleLore(event);
         }
     }
 
