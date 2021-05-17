@@ -1,18 +1,21 @@
 package com.buffer.lorena.bot.service;
 
 import com.buffer.lorena.bot.converter.LorenaConverter;
-import com.buffer.lorena.bot.entity.LoreId;
+import com.buffer.lorena.bot.entity.Lore;
+import com.buffer.lorena.bot.entity.MessageDAO;
 import com.buffer.lorena.bot.repository.LoreRepository;
+import com.buffer.lorena.bot.repository.MessageRepository;
 import com.buffer.lorena.bot.repository.ServerRepository;
 import com.buffer.lorena.bot.entity.ServerDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.javacord.api.DiscordApi;
 import org.javacord.api.entity.channel.Channel;
 import org.javacord.api.entity.message.*;
-import org.javacord.api.entity.message.embed.Embed;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
+import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.event.message.reaction.ReactionAddEvent;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -20,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -33,20 +37,25 @@ public class LorenaService {
     private final LorenaConverter lorenaConverter;
     private final ServerRepository serverRepository;
     private final LoreRepository loreRepository;
+    private final MessageRepository messageRepository;
     private final Environment environment;
+    private final Random random = new Random();
 
     /**
      * Instantiates a new Lorena service.
      *
-     * @param lorenaConverter  the lorena converter
-     * @param serverRepository the server repository
-     * @param environment      the environment
+     * @param lorenaConverter   the lorena converter
+     * @param serverRepository  the server repository
+     * @param environment       the environment
+     * @param loreRepository    the lore repository
+     * @param messageRepository the message repository
      */
-    public LorenaService(LorenaConverter lorenaConverter, ServerRepository serverRepository, Environment environment, LoreRepository loreRepository) {
+    public LorenaService(LorenaConverter lorenaConverter, ServerRepository serverRepository, Environment environment, LoreRepository loreRepository, MessageRepository messageRepository) {
         this.lorenaConverter = lorenaConverter;
         this.serverRepository = serverRepository;
         this.environment = environment;
         this.loreRepository = loreRepository;
+        this.messageRepository = messageRepository;
     }
 
     /**
@@ -55,9 +64,10 @@ public class LorenaService {
      * @param user    the user
      * @param server  the server
      * @param message the message
+     * @return the lore
      */
-    public void insertLore(User user, Server server, Message message){
-        this.lorenaConverter.convertLore(user, server, message);
+    public Lore insertLore(User user, Server server, Message message){
+       return this.lorenaConverter.convertLore(user, server, message);
     }
 
     /**
@@ -97,14 +107,22 @@ public class LorenaService {
     }
 
     private void handleLore(ReactionAddEvent event){
-        User user = event.getMessageAuthor().get().asUser().get();
+        DiscordApi discordApi = event.getApi();
         Server server = event.getServer().get();
-        Message message = event.getMessage().get();
-        boolean isNew = loreRepository.findById(new LoreId(user.getId(), server.getId(), message.getId())).isEmpty();
-        if(!isDevEnvironment()) {
-            this.insertLore(user, server, message);
+        logger.info(server);
+        Message message = discordApi.getMessageById(event.getMessageId(), event.getChannel()).join();
+        logger.info(message);
+        User user = message.getUserAuthor().get();
+        logger.info(user);
+        Lore lore = insertLore(user, server, message);
+
+        boolean isNew = lore.getUpdatedAt() == null;
+        if(isNew){
+            logger.info("New lore: {}", lore);
+            if(isProdEnvironment()){
+                this.sendEmbedToLoreBoard(event);
+            }
         }
-        if(isNew) this.sendEmbedToLoreBoard(event);
         event.addReactionsToMessage("🖋");
     }
 
@@ -122,7 +140,7 @@ public class LorenaService {
                     .addInlineField("Channel", "<#"+ channel.getIdAsString()+">")
                     .setColor(Color.PINK)
                     .setImage(message.getAttachments().isEmpty() ? null : message.getAttachments().get(0).getUrl().toString());
-            event.getApi().getChannelById(server.getLoreChannel()).get().asTextChannel().get().sendMessage(embed);
+            event.getApi().getChannelById(server.getLoreChannel()).flatMap(Channel::asTextChannel).get().sendMessage(embed);
         }
     }
 
@@ -149,8 +167,8 @@ public class LorenaService {
      *
      * @return the boolean
      */
-    public boolean isDevEnvironment(){
-        return Arrays.stream(environment.getActiveProfiles()).anyMatch(env -> env.equalsIgnoreCase("dev"));
+    public boolean isProdEnvironment(){
+        return Arrays.stream(environment.getActiveProfiles()).anyMatch(env -> env.equalsIgnoreCase("prod"));
     }
 
     /**
@@ -199,5 +217,17 @@ public class LorenaService {
                 idChannel.toString() +
                 "/" +
                 idMessage.toString();
+    }
+
+    /**
+     * Send random lore.
+     *
+     * @param event the event
+     */
+    public void sendRandomLore(MessageCreateEvent event) {
+        long serverId = event.getServer().get().getId();
+        int totalLoreCount = loreRepository.findTotalLoreCountByIdServer(serverId);
+        MessageDAO m = messageRepository.findById(loreRepository.findAllByIdServer(serverId).get(random.nextInt(totalLoreCount-1)).getIdMessage()).get();
+        event.getChannel().sendMessage(m.getMessageText());
     }
 }

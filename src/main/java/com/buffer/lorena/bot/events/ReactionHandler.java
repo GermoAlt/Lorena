@@ -1,9 +1,9 @@
 package com.buffer.lorena.bot.events;
 
-import com.buffer.lorena.bot.converter.LorenaConverter;
 import com.buffer.lorena.bot.service.LorenaService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.javacord.api.entity.server.Server;
 import org.javacord.api.event.message.reaction.ReactionAddEvent;
 import org.javacord.api.event.message.reaction.ReactionRemoveEvent;
 import org.javacord.api.listener.message.reaction.ReactionAddListener;
@@ -19,24 +19,23 @@ public class ReactionHandler implements ReactionAddListener, ReactionRemoveListe
 
     private final Logger logger = LogManager.getLogger(ReactionHandler.class);
 
-    private LorenaService lorenaService;
-    private LorenaConverter lorenaConverter;
+    private final LorenaService lorenaService;
 
     /**
      * Instantiates a new Reaction handler.
      *
      * @param lorenaService   the lorena service
-     * @param lorenaConverter the lorena converter
      */
     @Autowired
-    public ReactionHandler(LorenaService lorenaService, LorenaConverter lorenaConverter) {
+    public ReactionHandler(LorenaService lorenaService) {
         this.lorenaService = lorenaService;
-        this.lorenaConverter = lorenaConverter;
     }
 
     @Override
     public void onReactionAdd(ReactionAddEvent event) {
-        switch (event.getEmoji().asUnicodeEmoji().get()){
+        logger.info("emoji received in server {}: {}", event.getServer().map(Server::getName).get(), event.getEmoji());
+        event.getEmoji().asUnicodeEmoji().ifPresent(emoji ->{
+        switch (emoji){
             case "📜":
                 this.lorenaService.handleLoreReaction(event);
                 break;
@@ -52,11 +51,14 @@ public class ReactionHandler implements ReactionAddListener, ReactionRemoveListe
             case "🔄":
                 this.lorenaService.handleReprocessingReaction(event);
                 break;
-        }
+            default:
+                break;
+            }
+        });
     }
 
     @Override
     public void onReactionRemove(ReactionRemoveEvent event) {
-        logger.error("lol this is not implemented");
+        logger.error("reaction removed event");
     }
 }

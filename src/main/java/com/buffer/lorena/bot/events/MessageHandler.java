@@ -1,18 +1,15 @@
 package com.buffer.lorena.bot.events;
 
-import com.buffer.lorena.bot.entity.MessageDAO;
-import com.buffer.lorena.bot.repository.LoreRepository;
-import com.buffer.lorena.bot.repository.MessageRepository;
 import com.buffer.lorena.bot.service.LorenaService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.javacord.api.entity.server.Server;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.listener.message.MessageCreateListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Locale;
-import java.util.Random;
 
 /**
  * The type Message handler.
@@ -21,11 +18,8 @@ import java.util.Random;
 public class MessageHandler implements MessageCreateListener {
     private final Logger logger = LogManager.getLogger(MessageHandler.class);
     private static final String LORENA_TEXT = "lorena";
-    private final Random random = new Random();
 
     private LorenaService lorenaService;
-    private LoreRepository loreRepository;
-    private MessageRepository messageRepository;
 
     /**
      * Instantiates a new Message handler.
@@ -37,14 +31,10 @@ public class MessageHandler implements MessageCreateListener {
      * Instantiates a new Message handler.
      *
      * @param lorenaService     the lorena service
-     * @param loreRepository    the lore repository
-     * @param messageRepository the message repository
      */
     @Autowired
-    public MessageHandler(LorenaService lorenaService, LoreRepository loreRepository, MessageRepository messageRepository) {
+    public MessageHandler(LorenaService lorenaService) {
         this.lorenaService = lorenaService;
-        this.loreRepository = loreRepository;
-        this.messageRepository = messageRepository;
     }
 
     /**
@@ -54,10 +44,10 @@ public class MessageHandler implements MessageCreateListener {
      */
     @Override
     public void onMessageCreate(MessageCreateEvent event) {
-        logger.info("message received: {}", event.getMessageContent());
+        logger.info("message received in server {}: {}", event.getServer().map(Server::getName).get(), event.getMessageContent());
         String[] parsedMessage = event.getMessageContent().split(" ");
-        if (parsedMessage[0].equalsIgnoreCase("!lore")) {
-            switch (parsedMessage[1]){
+        if (parsedMessage[0].equalsIgnoreCase("!lore") || parsedMessage[0].equalsIgnoreCase("!lorebot")) {
+            switch (parsedMessage[1].toLowerCase(Locale.ROOT)){
                 case "ping":
                     event.getChannel().sendMessage("Pong!");
                     break;
@@ -65,14 +55,16 @@ public class MessageHandler implements MessageCreateListener {
                     if(event.getMessageAuthor().isServerAdmin()) {
                         try {
                             int uvt = Integer.parseInt(parsedMessage[2]);
-                            this.lorenaService.changeServerUserVoteThreshold(event.getServer().get(), uvt);
-                            event.addReactionsToMessage("✅");
+                            event.getServer().ifPresent(server -> {
+                                this.lorenaService.changeServerUserVoteThreshold(server, uvt);
+                                event.addReactionsToMessage("✅");
+                            });
                         } catch (Exception e) {
                             event.addReactionsToMessage("❌");
                         }
                     }
                     break;
-                case "setLoreChannel":
+                case "setlorechannel":
                     if(event.getMessageAuthor().isServerAdmin()) {
                         try {
                             Long newLoreChannelId = Long.parseLong(parsedMessage[2].substring(2, parsedMessage[2].length()-1));
@@ -83,14 +75,14 @@ public class MessageHandler implements MessageCreateListener {
                         }
                     }
                     break;
+                case "dolore":
+                    this.lorenaService.sendRandomLore(event);
+                    break;
                 default:
                     event.getChannel().sendMessage("fuck off");
             }
-        } else if(!lorenaService.isDevEnvironment() && event.getMessageContent().toLowerCase(Locale.ROOT).contains(LORENA_TEXT)){
-            long serverId = event.getServer().get().getId();
-            int totalLoreCount = loreRepository.findTotalLoreCountByIdServer(serverId);
-            MessageDAO m = messageRepository.findById(loreRepository.findAllByIdServer(serverId).get(random.nextInt(totalLoreCount-1)).getIdMessage()).get();
-            event.getChannel().sendMessage(m.getMessageText());
+        } else if(event.getMessageContent().toLowerCase(Locale.ROOT).contains(LORENA_TEXT)){
+            this.lorenaService.sendRandomLore(event);
         }
     }
 }

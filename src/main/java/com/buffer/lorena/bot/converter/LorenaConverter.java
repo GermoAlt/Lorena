@@ -53,9 +53,10 @@ public class LorenaConverter {
         if(userDAO.isEmpty()) {
             userDAO = Optional.of(new UserDAO(user.getId(), user.getDiscriminatedName()));
         } else {
+            if (userDAO.get().getCreatedAt() == null) userDAO.get().setCreatedAt(Timestamp.from(Instant.now()));
             userDAO.get().setUpdatedAt(Timestamp.from(Instant.now()));
         }
-        return Optional.of(userRepository.save(userDAO.get())).get();
+        return userRepository.saveAndFlush(userDAO.get());
     }
 
     /**
@@ -69,9 +70,10 @@ public class LorenaConverter {
         if(serverDAO.isEmpty()) {
             serverDAO = Optional.of(new ServerDAO(server.getId(), server.getName()));
         } else {
+            if (serverDAO.get().getCreatedAt() == null) serverDAO.get().setCreatedAt(Timestamp.from(Instant.now()));
             serverDAO.get().setUpdatedAt(Timestamp.from(Instant.now()));
         }
-        return Optional.of(serverRepository.save(serverDAO.get())).get();
+        return serverRepository.saveAndFlush(serverDAO.get());
 
     }
 
@@ -88,9 +90,10 @@ public class LorenaConverter {
                     message.getUserAuthor().get().getId(),
                     message.getServer().get().getId()));
         } else {
+            if (messageDAO.get().getCreatedAt() == null) messageDAO.get().setCreatedAt(Timestamp.from(Instant.now()));
             messageDAO.get().setUpdatedAt(Timestamp.from(Instant.now()));
         }
-        return Optional.of(messageRepository.save(messageDAO.get())).get();
+        return messageRepository.saveAndFlush(messageDAO.get());
     }
 
     /**
@@ -103,14 +106,20 @@ public class LorenaConverter {
      */
     public Lore convertLore(User user, Server server, Message message){
         LoreId id = new LoreId(
-                convertMessage(message).getIdMessage(),
                 convertServer(server).getIdServer(),
-                convertUser(user).getIdUser());
+                convertUser(user).getIdUser(),
+                convertMessage(message).getIdMessage());
         Optional<Lore> lore = loreRepository.findById(id);
+        Lore loreResult = null;
         if(lore.isEmpty()){
-            lore = Optional.of(new Lore(id));
-            lore = Optional.of(loreRepository.save(lore.get()));
+            loreResult = new Lore(id);
+            loreResult = loreRepository.saveAndFlush(loreResult);
+        } else {
+            loreResult = lore.get();
+            if (loreResult.getCreatedAt() == null) loreResult.setCreatedAt(Timestamp.from(Instant.now()));
+            loreResult.setUpdatedAt(Timestamp.from(Instant.now()));
+            loreResult = loreRepository.saveAndFlush(loreResult);
         }
-        return lore.get();
+        return loreResult;
     }
 }

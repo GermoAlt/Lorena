@@ -31,6 +31,7 @@ public class Lore {
    */
   public Lore(LoreId loreId) {
     this.loreId = loreId;
+    this.createdAt = Timestamp.from(Instant.now());
   }
 
   /**
@@ -90,4 +91,24 @@ public class Lore {
     return updatedAt;
   }
 
+  /**
+   * Sets updated at.
+   *
+   * @param updatedAt the updated at
+   */
+  public void setUpdatedAt(Timestamp updatedAt) {
+    this.updatedAt = updatedAt;
+  }
+
+  public LoreId getLoreId() {
+    return loreId;
+  }
+
+  public void setLoreId(LoreId loreId) {
+    this.loreId = loreId;
+  }
+
+  public void setCreatedAt(Timestamp createdAt) {
+    this.createdAt = createdAt;
+  }
 }

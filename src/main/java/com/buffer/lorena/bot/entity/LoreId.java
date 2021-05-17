@@ -1,5 +1,6 @@
 package com.buffer.lorena.bot.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 import java.util.Objects;
@@ -9,8 +10,11 @@ import java.util.Objects;
  */
 @Embeddable
 public class LoreId implements Serializable {
+    @Column(name="ID_SERVER")
     private long idServer;
+    @Column(name="ID_USER")
     private long idUser;
+    @Column(name="ID_MESSAGE")
     private long idMessage;
 
     /**
