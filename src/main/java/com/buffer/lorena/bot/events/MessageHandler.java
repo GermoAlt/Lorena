@@ -52,28 +52,10 @@ public class MessageHandler implements MessageCreateListener {
                     event.getChannel().sendMessage("Pong!");
                     break;
                 case "votes":
-                    if(event.getMessageAuthor().isServerAdmin()) {
-                        try {
-                            int uvt = Integer.parseInt(parsedMessage[2]);
-                            event.getServer().ifPresent(server -> {
-                                this.lorenaService.changeServerUserVoteThreshold(server, uvt);
-                                event.addReactionsToMessage("✅");
-                            });
-                        } catch (Exception e) {
-                            event.addReactionsToMessage("❌");
-                        }
-                    }
+                    this.lorenaService.changeUserVoteThreshold(event, parsedMessage[2]);
                     break;
                 case "setlorechannel":
-                    if(event.getMessageAuthor().isServerAdmin()) {
-                        try {
-                            Long newLoreChannelId = Long.parseLong(parsedMessage[2].substring(2, parsedMessage[2].length()-1));
-                            this.lorenaService.setServerLoreChannel(event.getServer().get(), newLoreChannelId);
-                            event.addReactionsToMessage("✅");
-                        } catch (Exception e) {
-                            event.addReactionsToMessage("❌");
-                        }
-                    }
+                    this.lorenaService.setServerLoreChannel(event, parsedMessage[2]);
                     break;
                 case "dolore":
                     this.lorenaService.sendRandomLore(event);
