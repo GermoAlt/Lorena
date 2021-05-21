@@ -22,57 +22,18 @@ import java.util.stream.Collectors;
 @Service
 public class ReactionService {
     private static final Logger logger = LogManager.getLogger(ReactionService.class);
-    private final LorenaConverter lorenaConverter;
-    private final Environment environment;
     private final LoreService loreService;
 
-    public ReactionService(LorenaConverter lorenaConverter, Environment environment, LoreService loreService) {
-        this.lorenaConverter = lorenaConverter;
-        this.environment = environment;
+    public ReactionService(LoreService loreService) {
         this.loreService = loreService;
     }
 
     public void handleLoreReaction(ReactionAddEvent event) {
-        try {
-            if (!event.requestMessage().get().getAuthor().isBotUser()) {
-                Reaction reaction = event.requestReaction().join().get();
-                List<Reaction> list = reaction.getMessage().getReactions().stream()
-                        .filter(r -> r.getEmoji().equalsEmoji("📜")).collect(Collectors.toList());
-                ServerDAO server = this.lorenaConverter.convertServer(event.getServer().get());
-                if (!list.isEmpty() && list.get(0).getCount() >= server.getUserVoteThreshold()) {
-                    this.handleLore(event);
-                }
-            }
-        }  catch (InterruptedException ie) {
-            logger.error("InterruptedException: ", ie);
-            Thread.currentThread().interrupt();
-        } catch (ExecutionException ee) {
-            logger.error("ExecutionException: ",ee);
-        }
+        this.loreService.handleLoreReaction(event);
     }
 
     public void handleLore(ReactionAddEvent event) {
-        DiscordApi discordApi = event.getApi();
-        Server server = event.getServer().get();
-        logger.info(server);
-        Message message = discordApi.getMessageById(event.getMessageId(), event.getChannel()).join();
-        logger.info(message);
-        User user = message.getUserAuthor().get();
-        logger.info(user);
-        Lore lore = this.loreService.insertLore(user, server, message);
-
-        boolean isNew = lore.getUpdatedAt() == null;
-        if(isNew){
-            logger.info("New lore: {}", lore);
-            if(isProdEnvironment()){
-                this.loreService.sendEmbedToLoreBoard(event);
-            }
-        }
-        event.addReactionsToMessage("🖋");
-    }
-
-    public boolean isProdEnvironment(){
-        return Arrays.stream(environment.getActiveProfiles()).anyMatch(env -> env.equalsIgnoreCase("prod"));
+        this.loreService.handleLore(event);
     }
 
     public void handleSendToGulagReaction(ReactionAddEvent event) {

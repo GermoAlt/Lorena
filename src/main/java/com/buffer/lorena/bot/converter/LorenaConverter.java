@@ -6,6 +6,7 @@ import com.buffer.lorena.bot.repository.ServerRepository;
 import com.buffer.lorena.bot.repository.UserRepository;
 import com.buffer.lorena.bot.entity.*;
 import org.javacord.api.entity.message.Message;
+import org.javacord.api.entity.message.MessageAttachment;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
 import org.springframework.stereotype.Component;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * The type Lorena converter.
@@ -84,16 +86,34 @@ public class LorenaConverter {
      * @return the message dao
      */
     public MessageDAO convertMessage(Message message){
-        Optional<MessageDAO> messageDAO = messageRepository.findById(message.getId());
-        if(messageDAO.isEmpty()){
-            messageDAO = Optional.of(new MessageDAO(message.getId(), message.getContent(),
+        Optional<MessageDAO> messageDAOWrapper = messageRepository.findById(message.getId());
+        MessageDAO messageDAO;
+        if(messageDAOWrapper.isEmpty()){
+            messageDAO = new MessageDAO(message.getId(), message.getContent(),
                     message.getUserAuthor().get().getId(),
-                    message.getServer().get().getId()));
+                    message.getServer().get().getId());
         } else {
-            if (messageDAO.get().getCreatedAt() == null) messageDAO.get().setCreatedAt(Timestamp.from(Instant.now()));
-            messageDAO.get().setUpdatedAt(Timestamp.from(Instant.now()));
+            messageDAO = messageDAOWrapper.get();
+            if (messageDAO.getCreatedAt() == null) messageDAO.setCreatedAt(Timestamp.from(Instant.now()));
+            messageDAO.setUpdatedAt(Timestamp.from(Instant.now()));
         }
-        return messageRepository.saveAndFlush(messageDAO.get());
+        if (!messageDAO.getMessageText().equalsIgnoreCase(this.getMessageTextWithEmbeds(message))){
+            messageDAO.setMessageText(this.getMessageTextWithEmbeds(message));
+        }
+
+        return messageRepository.saveAndFlush(messageDAO);
+    }
+
+    public String getMessageTextWithEmbeds(Message message){
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(message.getContent());
+        for(MessageAttachment attachment : message.getAttachments()){
+            if(stringBuilder.toString().length() > 0){
+                stringBuilder.append("\n ");
+            }
+            stringBuilder.append(attachment.getUrl());
+        }
+        return stringBuilder.toString();
     }
 
     /**

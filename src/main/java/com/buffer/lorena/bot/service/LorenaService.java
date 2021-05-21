@@ -5,18 +5,12 @@ import com.buffer.lorena.bot.entity.Lore;
 import com.buffer.lorena.bot.entity.ServerDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.javacord.api.DiscordApi;
-import org.javacord.api.entity.channel.Channel;
-import org.javacord.api.entity.message.*;
-import org.javacord.api.entity.message.embed.EmbedBuilder;
-import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.event.message.reaction.ReactionAddEvent;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
-import java.awt.*;
 import java.util.Arrays;
 
 /**
