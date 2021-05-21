@@ -46,7 +46,7 @@ public class MessageHandler implements MessageCreateListener {
     public void onMessageCreate(MessageCreateEvent event) {
         logger.info("message received in server {}: {}", event.getServer().map(Server::getName).get(), event.getMessageContent());
         String[] parsedMessage = event.getMessageContent().split(" ");
-        if (parsedMessage[0].equalsIgnoreCase("!lore") || parsedMessage[0].equalsIgnoreCase("!lorebot")) {
+        if ((parsedMessage[0].equalsIgnoreCase("!lore") || parsedMessage[0].equalsIgnoreCase("!lorebot")) && !event.getMessageAuthor().isBotUser()) {
             switch (parsedMessage[1].toLowerCase(Locale.ROOT)){
                 case "ping":
                     event.getChannel().sendMessage("Pong!");
