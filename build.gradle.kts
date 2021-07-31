@@ -1,9 +1,10 @@
 plugins {
     java
-	kotlin("jvm") version "1.5.10"
+	kotlin("jvm") version "1.5.21"
 	id("org.springframework.boot") version "2.4.4"
 	id("io.spring.dependency-management") version "1.0.11.RELEASE"
-	id("org.jetbrains.kotlin.plugin.spring") version "1.5.10"
+	id("org.jetbrains.kotlin.plugin.spring") version "1.5.21"
+	id("org.jetbrains.kotlin.plugin.jpa") version "1.5.21"
 }
 
 group = "com.buffer"
