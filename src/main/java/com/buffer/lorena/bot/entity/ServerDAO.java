@@ -20,6 +20,8 @@ public class ServerDAO {
   private Integer userVoteThreshold;
   @Column(name = "ID_CHANNEL_LOREBOARD")
   private Long loreChannel;
+  @Column(name = "ID_CHANNEL_SUGGESTION")
+  private Long suggestionChannel;
   @Column(name = "createdAt")
   private java.sql.Timestamp createdAt;
   @Column(name = "updatedAt")
@@ -154,5 +156,23 @@ public class ServerDAO {
    */
   public void setLoreChannel(Long loreChannel) {
     this.loreChannel = loreChannel;
+  }
+
+  /**
+   * Gets suggestion channel.
+   *
+   * @return the suggestion channel
+   */
+  public Long getSuggestionChannel() {
+    return suggestionChannel;
+  }
+
+  /**
+   * Sets suggestion channel.
+   *
+   * @param suggestionChannel the suggestion channel
+   */
+  public void setSuggestionChannel(Long suggestionChannel) {
+    this.suggestionChannel = suggestionChannel;
   }
 }

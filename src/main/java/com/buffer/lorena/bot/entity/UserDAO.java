@@ -22,97 +22,97 @@ public class UserDAO {
   @Column(name = "updatedAt")
   private java.sql.Timestamp updatedAt;
 
-  /**
-   * Instantiates a new User dao.
-   */
-  public UserDAO() {
+    /**
+     * Instantiates a new User dao.
+     */
+    public UserDAO() {
     this.createdAt = Timestamp.from(Instant.now());
   }
 
-  /**
-   * Instantiates a new User dao.
-   *
-   * @param idUser the id user
-   * @param name   the name
-   */
-  public UserDAO(long idUser, String name) {
+    /**
+     * Instantiates a new User dao.
+     *
+     * @param idUser the id user
+     * @param name   the name
+     */
+    public UserDAO(long idUser, String name) {
     this.idUser = idUser;
     this.name = name;
     this.createdAt = Timestamp.from(Instant.now());
   }
 
-  /**
-   * Gets id user.
-   *
-   * @return the id user
-   */
-  public long getIdUser() {
+    /**
+     * Gets id user.
+     *
+     * @return the id user
+     */
+    public long getIdUser() {
     return idUser;
   }
 
-  /**
-   * Sets id user.
-   *
-   * @param idUser the id user
-   */
-  public void setIdUser(long idUser) {
+    /**
+     * Sets id user.
+     *
+     * @param idUser the id user
+     */
+    public void setIdUser(long idUser) {
     this.idUser = idUser;
   }
 
 
-  /**
-   * Gets name.
-   *
-   * @return the name
-   */
-  public String getName() {
+    /**
+     * Gets name.
+     *
+     * @return the name
+     */
+    public String getName() {
     return name;
   }
 
-  /**
-   * Sets name.
-   *
-   * @param name the name
-   */
-  public void setName(String name) {
+    /**
+     * Sets name.
+     *
+     * @param name the name
+     */
+    public void setName(String name) {
     this.name = name;
   }
 
 
-  /**
-   * Gets created at.
-   *
-   * @return the created at
-   */
-  public java.sql.Timestamp getCreatedAt() {
+    /**
+     * Gets created at.
+     *
+     * @return the created at
+     */
+    public java.sql.Timestamp getCreatedAt() {
     return createdAt;
   }
 
-  /**
-   * Sets created at.
-   *
-   * @param createdAt the created at
-   */
-  public void setCreatedAt(java.sql.Timestamp createdAt) {
+    /**
+     * Sets created at.
+     *
+     * @param createdAt the created at
+     */
+    public void setCreatedAt(java.sql.Timestamp createdAt) {
     this.createdAt = createdAt;
   }
 
 
-  /**
-   * Gets updated at.
-   *
-   * @return the updated at
-   */
-  public java.sql.Timestamp getUpdatedAt() {
+    /**
+     * Gets updated at.
+     *
+     * @return the updated at
+     */
+    public java.sql.Timestamp getUpdatedAt() {
     return updatedAt;
   }
 
-  /**
-   * Sets updated at.
-   *
-   * @param updatedAt the updated at
-   */
-  public void setUpdatedAt(java.sql.Timestamp updatedAt) {
+    /**
+     * Sets updated at.
+     *
+     * @param updatedAt the updated at
+     */
+    public void setUpdatedAt(java.sql.Timestamp updatedAt) {
     this.updatedAt = updatedAt;
   }
 

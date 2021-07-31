@@ -3,8 +3,10 @@ package com.buffer.lorena.bot.service;
 import com.buffer.lorena.bot.converter.LorenaConverter;
 import com.buffer.lorena.bot.entity.Lore;
 import com.buffer.lorena.bot.entity.ServerDAO;
+import com.buffer.lorena.bot.entity.Suggestion;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.event.message.reaction.ReactionAddEvent;
@@ -106,6 +108,25 @@ public class LorenaService {
     }
 
     /**
+     * Sets server suggestion channel.
+     *
+     * @param event                the event
+     * @param newSuggestionChannel the new suggestion channel
+     */
+    public void setServerSuggestionChannel(MessageCreateEvent event, String newSuggestionChannel) {
+        if(event.getMessageAuthor().isServerAdmin()) {
+            try {
+                Long newSuggestionChannelId = Long.parseLong(newSuggestionChannel.substring(2, newSuggestionChannel.length()-1));
+                this.messageService.setServerSuggestionChannel(event.getServer().get(), newSuggestionChannelId);
+                event.addReactionsToMessage("✅");
+            } catch (Exception e) {
+                event.addReactionsToMessage("❌");
+            }
+        }
+
+    }
+
+    /**
      * Handle reprocessing.
      *
      * @param event the event
@@ -141,5 +162,14 @@ public class LorenaService {
                 event.addReactionsToMessage("❌");
             }
         }
+    }
+
+    /**
+     * Handle suggestion.
+     *
+     * @param suggestion the suggestion
+     */
+    public void handleSuggestion(Suggestion suggestion) {
+        this.messageService.handleSuggestion(suggestion);
     }
 }

@@ -1,4 +1,4 @@
-package com.buffer.lorena.bot.events;
+package com.buffer.lorena.bot.handler;
 
 import com.buffer.lorena.bot.service.DiscordService;
 import org.apache.logging.log4j.LogManager;
@@ -29,19 +29,25 @@ public class EventHandler {
      * The Reaction handler.
      */
     ReactionHandler reactionHandler;
+    /**
+     * The Slash command handler.
+     */
+    SlashCommandHandler slashCommandHandler;
 
     /**
      * Instantiates a new Event handler.
      *
-     * @param discordService  the discord service
-     * @param messageHandler  the message handler
-     * @param reactionHandler the reaction handler
+     * @param discordService      the discord service
+     * @param messageHandler      the message handler
+     * @param reactionHandler     the reaction handler
+     * @param slashCommandHandler the slash command handler
      */
     @Autowired
-    public EventHandler(DiscordService discordService, MessageHandler messageHandler, ReactionHandler reactionHandler) {
+    public EventHandler(DiscordService discordService, MessageHandler messageHandler, ReactionHandler reactionHandler, SlashCommandHandler slashCommandHandler) {
         this.discordService = discordService;
         this.messageHandler = messageHandler;
         this.reactionHandler = reactionHandler;
+        this.slashCommandHandler = slashCommandHandler;
         this.addEventHandlers();
     }
 
@@ -51,4 +57,5 @@ public class EventHandler {
         api.addReactionAddListener(this.reactionHandler);
         api.addReactionRemoveListener(this.reactionHandler);
     }
+
 }
