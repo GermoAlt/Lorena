@@ -55,6 +55,7 @@ public class LorenaConverter {
         if(userDAO.isEmpty()) {
             userDAO = Optional.of(new UserDAO(user.getId(), user.getDiscriminatedName()));
         } else {
+            userDAO.get().setName(user.getDiscriminatedName());
             if (userDAO.get().getCreatedAt() == null) userDAO.get().setCreatedAt(Timestamp.from(Instant.now()));
             userDAO.get().setUpdatedAt(Timestamp.from(Instant.now()));
         }
@@ -72,6 +73,7 @@ public class LorenaConverter {
         if(serverDAO.isEmpty()) {
             serverDAO = Optional.of(new ServerDAO(server.getId(), server.getName()));
         } else {
+            serverDAO.get().setName(server.getName());
             if (serverDAO.get().getCreatedAt() == null) serverDAO.get().setCreatedAt(Timestamp.from(Instant.now()));
             serverDAO.get().setUpdatedAt(Timestamp.from(Instant.now()));
         }
