@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "com.buffer"
-version = "0.0.1-SNAPSHOT"
+version = "1.3.3-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 
@@ -40,8 +40,9 @@ dependencies {
 	implementation("com.h2database:h2")
 
 	//javacord
-	implementation("org.javacord:javacord:3.2.0")
+	implementation("org.javacord:javacord:3.3.2")
 
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.11.4")
 
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 	annotationProcessor("org.projectlombok:lombok")

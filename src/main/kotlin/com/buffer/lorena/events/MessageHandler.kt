@@ -40,7 +40,9 @@ class MessageHandler(
                     "dolore" -> lorenaService.sendRandomLore(event)
                     else -> event.channel.sendMessage("fuck off")
                 }
-            parsedMessage.any { it.equals(LORENA_TEXT, true) } -> lorenaService.sendRandomLore(event)
+            // TODO How come?
+//            parsedMessage.any { it.equals(LORENA_TEXT, true) } -> lorenaService.sendRandomLore(event)
+            event.messageContent.contains(LORENA_TEXT) -> lorenaService.sendRandomLore(event)
         }
 
         parsedMessage.filter { it.isReddit() }.forEach {
@@ -48,11 +50,10 @@ class MessageHandler(
         }
     }
 
-    private fun String.isReddit(): Boolean = REDDIT_LINKS.any { this.startsWith(it)
-    }
+    private fun String.isReddit(): Boolean = this.matches(REDDIT_REGEX)
 
     companion object {
         private const val LORENA_TEXT = "lorena"
-        private val REDDIT_LINKS = listOf("r/", "u/")
+        private val REDDIT_REGEX = """\b([ru])/([a-zA-Z0-9-_]{3,21})\b""".toRegex()
     }
 }

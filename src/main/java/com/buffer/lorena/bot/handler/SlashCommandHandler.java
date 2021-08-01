@@ -40,6 +40,7 @@ public class SlashCommandHandler {
     public SlashCommandHandler(DiscordService discordService, LorenaService lorenaService){
         this.lorenaService = lorenaService;
         api = discordService.getDiscordApi();
+        registerSlashCommands(api.getServerById(774734597816713216L).get());
         registerSlashCommandsListener();
     }
 
@@ -64,12 +65,12 @@ public class SlashCommandHandler {
             switch (slashCommandInteraction.getCommandName()){
                 case SUGGESTION_COMMAND_NAME:
                     logger.info(event.getInteraction());
+                    slashCommandInteraction.createImmediateResponder().setContent("Suggestion noted.").respond();
                     Suggestion suggestion = new Suggestion(slashCommandInteraction.getOptionByName(SUGGESTION_OPTION_NAME).get().getStringValue().get(),
                             slashCommandInteraction.getUser(),
                             slashCommandInteraction.getServer().get(),
                             api);
                     this.lorenaService.handleSuggestion(suggestion);
-                    slashCommandInteraction.createImmediateResponder().setContent("Suggestion added").respond();
                     break;
                 default:
                     slashCommandInteraction.createImmediateResponder().setContent("call the code monkey bc this shit dont work lmao").respond();
