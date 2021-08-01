@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * The type Lorena converter.
@@ -106,6 +105,12 @@ public class LorenaConverter {
         return messageRepository.saveAndFlush(messageDAO);
     }
 
+    /**
+     * Get message text with embeds string.
+     *
+     * @param message the message
+     * @return the string
+     */
     public String getMessageTextWithEmbeds(Message message){
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(message.getContent());

@@ -1,6 +1,6 @@
 package com.buffer.lorena.bot.config;
 
-import com.buffer.lorena.bot.events.EventHandler;
+import com.buffer.lorena.bot.handler.EventHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +34,11 @@ public class LorenaApplicationListener implements ApplicationListener<Applicatio
         this.eventHandler = eventHandler;
     }
 
+    /**
+     * On application event.
+     *
+     * @param event the event
+     */
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
         logger.info("ITS ALIVE!");

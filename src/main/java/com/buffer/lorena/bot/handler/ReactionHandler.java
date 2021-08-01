@@ -1,4 +1,4 @@
-package com.buffer.lorena.bot.events;
+package com.buffer.lorena.bot.handler;
 
 import com.buffer.lorena.bot.service.LorenaService;
 import org.apache.logging.log4j.LogManager;
@@ -24,13 +24,18 @@ public class ReactionHandler implements ReactionAddListener, ReactionRemoveListe
     /**
      * Instantiates a new Reaction handler.
      *
-     * @param lorenaService   the lorena service
+     * @param lorenaService the lorena service
      */
     @Autowired
     public ReactionHandler(LorenaService lorenaService) {
         this.lorenaService = lorenaService;
     }
 
+    /**
+     * On reaction add.
+     *
+     * @param event the event
+     */
     @Override
     public void onReactionAdd(ReactionAddEvent event) {
         logger.info("emoji received in server {}: {}", event.getServer().map(Server::getName).get(), event.getEmoji());
@@ -57,6 +62,11 @@ public class ReactionHandler implements ReactionAddListener, ReactionRemoveListe
         });
     }
 
+    /**
+     * On reaction remove.
+     *
+     * @param event the event
+     */
     @Override
     public void onReactionRemove(ReactionRemoveEvent event) {
         logger.error("reaction removed event");

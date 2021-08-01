@@ -23,6 +23,9 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
+/**
+ * The type Lore service.
+ */
 @Service
 public class LoreService {
 
@@ -31,11 +34,22 @@ public class LoreService {
     private final Environment environment;
     private static final Logger logger = LogManager.getLogger(LoreService.class);
 
+    /**
+     * Instantiates a new Lore service.
+     *
+     * @param lorenaConverter the lorena converter
+     * @param environment     the environment
+     */
     public LoreService(LorenaConverter lorenaConverter, Environment environment) {
         this.lorenaConverter = lorenaConverter;
         this.environment = environment;
     }
 
+    /**
+     * Handle lore reaction.
+     *
+     * @param event the event
+     */
     public void handleLoreReaction(ReactionAddEvent event) {
         try {
             if (!event.requestMessage().get().getAuthor().isBotUser()) {
@@ -55,6 +69,11 @@ public class LoreService {
         }
     }
 
+    /**
+     * Handle lore.
+     *
+     * @param event the event
+     */
     public void handleLore(ReactionAddEvent event) {
         DiscordApi discordApi = event.getApi();
         Server server = event.getServer().get();
@@ -75,10 +94,23 @@ public class LoreService {
         event.addReactionsToMessage("🖋");
     }
 
+    /**
+     * Insert lore lore.
+     *
+     * @param user    the user
+     * @param server  the server
+     * @param message the message
+     * @return the lore
+     */
     public Lore insertLore(User user, Server server, Message message){
         return this.lorenaConverter.convertLore(user, server, message);
     }
 
+    /**
+     * Send embed to lore board.
+     *
+     * @param event the event
+     */
     public void sendEmbedToLoreBoard(ReactionAddEvent event){
         Channel channel = event.getChannel();
         Message message = event.getApi().getMessageById(event.getMessageId(), channel.asTextChannel().get()).join();
@@ -97,6 +129,11 @@ public class LoreService {
         }
     }
 
+    /**
+     * Is prod environment boolean.
+     *
+     * @return the boolean
+     */
     public boolean isProdEnvironment(){
         return Arrays.stream(environment.getActiveProfiles()).anyMatch(env -> env.equalsIgnoreCase("prod"));
     }
@@ -109,4 +146,5 @@ public class LoreService {
                 "/" +
                 idMessage.toString();
     }
+
 }
