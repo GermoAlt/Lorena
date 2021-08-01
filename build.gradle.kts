@@ -28,10 +28,16 @@ sourceSets {
 	}
 }
 
+springBoot {
+	mainClass.set("com.buffer.lorena.LorenaApplicationKt")
+}
+
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-jdbc")
 	implementation("org.springframework.boot:spring-boot-starter-web")
+
+	implementation("com.h2database:h2")
 
 	//javacord
 	implementation("org.javacord:javacord:3.2.0")
