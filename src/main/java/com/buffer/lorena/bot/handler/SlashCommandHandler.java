@@ -40,6 +40,7 @@ public class SlashCommandHandler {
     public SlashCommandHandler(DiscordService discordService, LorenaService lorenaService){
         this.lorenaService = lorenaService;
         api = discordService.getDiscordApi();
+        registerSlashCommands(api.getServerById(774734597816713216L).get());
         registerSlashCommandsListener();
     }
 
