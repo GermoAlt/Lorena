@@ -1,6 +1,5 @@
 package com.buffer.lorena.bot.handler;
 
-import com.buffer.lorena.bot.entity.Lore;
 import com.buffer.lorena.bot.entity.Suggestion;
 import com.buffer.lorena.bot.service.DiscordService;
 import com.buffer.lorena.bot.service.LorenaService;
@@ -15,7 +14,6 @@ import org.javacord.api.interaction.SlashCommandOptionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -25,8 +23,8 @@ import java.util.List;
 public class SlashCommandHandler {
 
     private final Logger logger = LogManager.getLogger(SlashCommandHandler.class);
-    private LorenaService lorenaService;
-    private DiscordApi api;
+    private final LorenaService lorenaService;
+    private final DiscordApi api;
     private static final String SUGGESTION_COMMAND_NAME = "suggest";
     private static final String SUGGESTION_OPTION_NAME = "suggestion";
 

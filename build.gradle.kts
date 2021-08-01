@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "com.buffer"
-version = "1.3.3-SNAPSHOT"
+version = "1.3.4-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 

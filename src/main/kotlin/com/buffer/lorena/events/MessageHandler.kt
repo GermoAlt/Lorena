@@ -40,7 +40,7 @@ class MessageHandler(
                     "dolore" -> lorenaService.sendRandomLore(event)
                     else -> event.channel.sendMessage("fuck off")
                 }
-            event.messageContent.contains(LORENA_TEXT) -> lorenaService.sendRandomLore(event)
+            event.messageContent.lowercase().contains(LORENA_TEXT) -> lorenaService.sendRandomLore(event)
         }
 
         parsedMessage.filter { it.isReddit() }.forEach {
