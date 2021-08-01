@@ -40,7 +40,7 @@ dependencies {
 	implementation("com.h2database:h2")
 
 	//javacord
-	implementation("org.javacord:javacord:3.2.0")
+	implementation("org.javacord:javacord:3.3.2")
 
 
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
