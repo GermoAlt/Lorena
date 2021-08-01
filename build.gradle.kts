@@ -42,6 +42,7 @@ dependencies {
 	//javacord
 	implementation("org.javacord:javacord:3.3.2")
 
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.11.4")
 
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 	annotationProcessor("org.projectlombok:lombok")
