@@ -27,13 +27,13 @@ class RedditService (
         } catch (_: Exception) {
             return
         }
-        logger.info("result is: {}", result)
-        if (redditLink.startsWith("r/") && "\"kind\": \"t5\"" !in result) {
-            logger.info("Subreddit {} doesn't exist", redditLink)
+//        logger.info("result is: {}", result)
+        if (redditLink.startsWith("r/") && "\"kind\": \"Listening\"" in result) {
+//            logger.info("Subreddit {} doesn't exist", redditLink)
             return
         }
         if (redditLink.startsWith("u/") && "\"kind\": \"t2\"" !in result) {
-            logger.info("Reddit user {} doesn't exist", redditLink)
+//            logger.info("Reddit user {} doesn't exist", redditLink)
             return
         }
         event.channel.sendMessage(url)
