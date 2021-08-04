@@ -11,53 +11,53 @@ import javax.measure.unit.Unit as JUnit
 
 enum class Units(val unit: JUnit<*>, val printedName: String, val ciNames: List<String>, vararg val csNames: String) {
     // Base units
-    KELVIN(SI.KELVIN, "kelvin", listOf("kelvin"), "K"),
-    KILOGRAM(SI.KILOGRAM, "kilograms", listOf("kg, kilogram", "kgs", "kilograms")),
-    METRE(SI.METRE, "metres", listOf("metre", "meter", "meters", "metres", "m")),
-    SECOND(SI.SECOND, "seconds", listOf("second", "seconds", "s")),
+    KELVIN(SI.KELVIN, "K", listOf("kelvin"), "K"),
+    KILOGRAM(SI.KILOGRAM, "kg", listOf("kg, kilogram", "kgs", "kilograms")),
+    METRE(SI.METRE, "m", listOf("metre", "meter", "meters", "metres", "m")),
+    SECOND(SI.SECOND, "sec", listOf("second", "seconds", "s")),
 
     // Derived units
-    GRAM(SI.GRAM, "grams", listOf("gram", "grams", "g")),
-    CELSIUS(SI.CELSIUS, "degrees Celsius", listOf("celsius", "°c", "°"), "C"),
+    GRAM(SI.GRAM, "g", listOf("gram", "grams", "g")),
+    CELSIUS(SI.CELSIUS, "°C", listOf("celsius", "°c", "°"), "C"),
     // Double
-    SQUARE_METRE(SI.SQUARE_METRE, "square metres", listOf("m²", "m2", "square meter", "square meters")),
-    KILOMETRE(SI.KILOMETRE, "kilometres", listOf("km", "kilometre", "kilometres", "kilometer", "kilometers")),
-    CENTIMETRE(SI.CENTIMETRE, "centimetres", listOf("cm", "centimetre", "centimetres", "centimeter", "centimeters")),
-    MILLIMETRE(SI.MILLIMETRE, "millimetres", listOf("mm", "millimetre", "millimeters", "millimeter", "millimeters")),
+    SQUARE_METRE(SI.SQUARE_METRE, "m²", listOf("m²", "m2", "square meter", "square meters")),
+    KILOMETRE(SI.KILOMETRE, "km", listOf("km", "kilometre", "kilometres", "kilometer", "kilometers")),
+    CENTIMETRE(SI.CENTIMETRE, "cm", listOf("cm", "centimetre", "centimetres", "centimeter", "centimeters")),
+    MILLIMETRE(SI.MILLIMETRE, "mm", listOf("mm", "millimetre", "millimeters", "millimeter", "millimeters")),
 
     // Non SI
-    FOOT(NonSI.FOOT, "feet", listOf("ft", "foot", "feet")),
+    FOOT(NonSI.FOOT, "ft", listOf("ft", "foot", "feet")),
     // Double
-    SQUARE_FOOT(ProductUnit<Area>(NonSI.FOOT.times(NonSI.FOOT)), "square feet", listOf("ft2", "ft²", "sq ft", "sq. ft", "square feet")),
-    YARD(NonSI.YARD, "yards", listOf("yard", "yards", "yd")),
-    INCH(NonSI.INCH, "inches", listOf("inch", "inches", "in", """"""")),
-    MILE(NonSI.MILE, "miles", listOf("mile", "miles", "mi")),
+    SQUARE_FOOT(ProductUnit<Area>(NonSI.FOOT.times(NonSI.FOOT)), "ft²", listOf("ft2", "ft²", "sq ft", "sq. ft", "square feet")),
+    YARD(NonSI.YARD, "yd", listOf("yard", "yards", "yd")),
+    INCH(NonSI.INCH, "in", listOf("inch", "inches", "in", """"""")),
+    MILE(NonSI.MILE, "mi", listOf("mile", "miles", "mi")),
 
-    MINUTE(NonSI.MINUTE, "minutes", listOf("min", "minute", "minutes")),
-    HOUR(NonSI.HOUR, "hours", listOf("hours", "hour", "hr", "h")),
-    DAY(NonSI.DAY, "days", listOf("days", "day", "d")),
-    WEEK(NonSI.WEEK, "weeks", listOf("weeks", "week", "w")),
-    YEAR(NonSI.YEAR, "years", listOf("year", "years", "yr")),
-    MONTH(NonSI.MONTH, "months", listOf("month", "months", "mo")),
+    MINUTE(NonSI.MINUTE, "min", listOf("min", "minute", "minutes")),
+    HOUR(NonSI.HOUR, "hr", listOf("hours", "hour", "hr", "h")),
+    DAY(NonSI.DAY, "d", listOf("days", "day", "d")),
+    WEEK(NonSI.WEEK, "w", listOf("weeks", "week", "w")),
+    YEAR(NonSI.YEAR, "yr", listOf("year", "years", "yr")),
+    MONTH(NonSI.MONTH, "mths", listOf("month", "months", "mo")),
 
-    POUND(NonSI.POUND, "pounds", listOf("pound", "pounds", "lb", "lbs")),
-    OUNCE(NonSI.OUNCE, "ounces", listOf("ounce", "ounces", "oz")),
-    TON(NonSI.METRIC_TON, "tonnes", listOf("ton", "tonne", "tons", "tonnes", "t")),
+    POUND(NonSI.POUND, "lbs", listOf("pound", "pounds", "lb", "lbs")),
+    OUNCE(NonSI.OUNCE, "oz", listOf("ounce", "ounces", "oz")),
+    TON(NonSI.METRIC_TON, "t", listOf("ton", "tonne", "tons", "tonnes", "t")),
     // Double
-    US_TON(NonSI.TON_US, "US tons", listOf("us ton", "us tons", "imperial ton", "imperial tons")),
+    US_TON(NonSI.TON_US, "us t", listOf("us ton", "us tons", "imperial ton", "imperial tons")),
 
-    FAHRENHEIT(NonSI.FAHRENHEIT, "degrees Fahrenheit", listOf("°F", "fahrenheit"), "F"),
+    FAHRENHEIT(NonSI.FAHRENHEIT, "°F", listOf("°F", "fahrenheit"), "F"),
 
-    KMH(NonSI.KILOMETRES_PER_HOUR, "kilometres per hour", listOf("km/h", "kmh", "kph")),
-    MPH(NonSI.MILES_PER_HOUR, "miles per hour", listOf("mph")),
+    KMH(NonSI.KILOMETRES_PER_HOUR, "km/h", listOf("km/h", "kmh", "kph")),
+    MPH(NonSI.MILES_PER_HOUR, "mph", listOf("mph")),
 
-    LITRE(NonSI.LITRE, "litres", listOf("l", "litre", "litres", "liter", "liters")),
-    MILLILITRE(MILLI(NonSI.LITRE), "millilitres", listOf("ml", "millilitre", "milliliter", "millilitres", "milliliters")),
-    CENTILITRE(CENTI(NonSI.LITRE), "centilitres", listOf("cl", "centilitre", "centilitres", "centiliter", "centiliters")),
-    DECILITRE(DECI(NonSI.LITRE), "decilitres", listOf("dl", "decilitre", "decilitres", "deciliter", "deciliters")),
+    LITRE(NonSI.LITRE, "l", listOf("l", "litre", "litres", "liter", "liters")),
+    MILLILITRE(MILLI(NonSI.LITRE), "ml", listOf("ml", "millilitre", "milliliter", "millilitres", "milliliters")),
+    CENTILITRE(CENTI(NonSI.LITRE), "cl", listOf("cl", "centilitre", "centilitres", "centiliter", "centiliters")),
+    DECILITRE(DECI(NonSI.LITRE), "dl", listOf("dl", "decilitre", "decilitres", "deciliter", "deciliters")),
     // Double
-    LIQUID_OUNCE(NonSI.OUNCE_LIQUID_US, "liquid ounces", listOf("liquid ounce", "liquid ounces", "fl oz", "fl. oz")),
-    US_GALLON(NonSI.GALLON_LIQUID_US, "US gallons", listOf("gallon", "gallons", "gal")),
+    LIQUID_OUNCE(NonSI.OUNCE_LIQUID_US, "fl. oz", listOf("liquid ounce", "liquid ounces", "fl oz", "fl. oz")),
+    US_GALLON(NonSI.GALLON_LIQUID_US, "gal", listOf("gallon", "gallons", "gal")),
     CUP(NonSI.LITRE.times(0.236588), "cups", listOf("cup", "cups")),
 
     ;
