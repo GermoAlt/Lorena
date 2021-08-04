@@ -1,12 +1,8 @@
 package com.buffer.lorena.bot.service;
 
-import com.buffer.lorena.bot.converter.LorenaConverter;
-import com.buffer.lorena.bot.entity.Lore;
-import com.buffer.lorena.bot.entity.ServerDAO;
 import com.buffer.lorena.bot.entity.Suggestion;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.event.message.reaction.ReactionAddEvent;

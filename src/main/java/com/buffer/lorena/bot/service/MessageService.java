@@ -7,6 +7,8 @@ import com.buffer.lorena.bot.entity.Suggestion;
 import com.buffer.lorena.bot.repository.LoreRepository;
 import com.buffer.lorena.bot.repository.MessageRepository;
 import com.buffer.lorena.bot.repository.ServerRepository;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.javacord.api.entity.channel.Channel;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.server.Server;
@@ -21,12 +23,11 @@ import java.util.Random;
  */
 @Service
 public class MessageService {
-
+    private final Logger logger = LogManager.getLogger(MessageService.class);
     private final LorenaConverter lorenaConverter;
     private final ServerRepository serverRepository;
     private final LoreRepository loreRepository;
     private final MessageRepository messageRepository;
-    private final LoreService loreService;
     private final Random random = new Random();
 
     /**
@@ -36,15 +37,13 @@ public class MessageService {
      * @param serverRepository  the server repository
      * @param loreRepository    the lore repository
      * @param messageRepository the message repository
-     * @param loreService       the lore service
      */
     public MessageService(LorenaConverter lorenaConverter, ServerRepository serverRepository,
-                          LoreRepository loreRepository, MessageRepository messageRepository, LoreService loreService) {
+                          LoreRepository loreRepository, MessageRepository messageRepository) {
         this.lorenaConverter = lorenaConverter;
         this.serverRepository = serverRepository;
         this.loreRepository = loreRepository;
         this.messageRepository = messageRepository;
-        this.loreService = loreService;
     }
 
     /**
@@ -92,6 +91,7 @@ public class MessageService {
         long serverId = event.getServer().get().getId();
         int totalLoreCount = loreRepository.findTotalLoreCountByIdServer(serverId);
         MessageDAO m = messageRepository.findById(loreRepository.findAllByIdServer(serverId).get(random.nextInt(totalLoreCount-1)).getIdMessage()).get();
+        logger.info("Sending random lore: {}", m.getMessageText());
         event.getChannel().sendMessage(m.getMessageText());
     }
 
