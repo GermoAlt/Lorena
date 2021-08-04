@@ -60,6 +60,8 @@ enum class Units(val unit: JUnit<*>, val printedName: String, val ciNames: List<
     US_GALLON(NonSI.GALLON_LIQUID_US, "gal", listOf("gallon", "gallons", "gal")),
     CUP(NonSI.LITRE.times(0.236588), "cups", listOf("cup", "cups")),
 
+    // Jokes
+    GIRLS(CUP.unit.divide(2), "girls", listOf("girls", "girl"))
     ;
 
     companion object {

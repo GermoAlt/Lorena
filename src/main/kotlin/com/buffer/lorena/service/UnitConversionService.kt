@@ -7,6 +7,10 @@ import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import org.javacord.api.event.message.MessageCreateEvent
 import org.springframework.stereotype.Service
+import java.math.RoundingMode
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.*
 import javax.measure.converter.ConversionException
 
 @Service
@@ -51,7 +55,7 @@ class UnitConversionService {
                             logger.warn("ConversionException: {} to {}", u, c, e)
                             null
                         }
-                        convertedValue?.let { "$value ${u.printedName} is $it ${c.printedName}" }
+                        convertedValue?.let { "${value.digits(3)} ${u.printedName} is ${it.digits(3)} ${c.printedName}" }
                     }
                 }
             }
@@ -64,4 +68,9 @@ class UnitConversionService {
     private fun String.isNumeric(): Boolean {
         return this.toDoubleOrNull() != null
     }
+
+    private fun Double.digits(digits: Int): String =
+        DecimalFormat("0.${"#".repeat(digits)}", DecimalFormatSymbols.getInstance(Locale.ROOT)).apply {
+                roundingMode = RoundingMode.HALF_UP
+        }.format(this)
 }
