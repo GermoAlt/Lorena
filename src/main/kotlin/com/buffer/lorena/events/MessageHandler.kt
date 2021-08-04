@@ -3,6 +3,7 @@ package com.buffer.lorena.events
 import org.javacord.api.listener.message.MessageCreateListener
 import com.buffer.lorena.bot.service.LorenaService
 import com.buffer.lorena.service.RedditService
+import com.buffer.lorena.service.UnitConversionService
 import org.apache.logging.log4j.LogManager
 import org.javacord.api.entity.server.Server
 import org.javacord.api.event.message.MessageCreateEvent
@@ -16,6 +17,7 @@ import java.util.Locale
 class MessageHandler(
         private val lorenaService: LorenaService,
         private val redditService: RedditService,
+        private val unitConversionService: UnitConversionService,
 ) : MessageCreateListener {
     private val logger = LogManager.getLogger(MessageHandler::class.java)
 
@@ -48,6 +50,8 @@ class MessageHandler(
         parsedMessage.filter { it.isReddit() }.forEach {
             redditService.sendLink(it, event)
         }
+
+        unitConversionService.parseMessage(event.messageContent, event)
     }
 
     private fun String.isReddit(): Boolean = this.matches(REDDIT_REGEX)
