@@ -3,6 +3,7 @@ package com.buffer.lorena.service
 import com.buffer.lorena.utils.Units
 import com.buffer.lorena.utils.Units.Companion.autoConverter
 import com.buffer.lorena.utils.Units.Companion.corresponding
+import com.buffer.lorena.utils.orNull
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import org.javacord.api.event.message.MessageCreateEvent
@@ -21,7 +22,8 @@ class UnitConversionService {
         message: String,
         event: MessageCreateEvent,
     ) {
-        if (event.messageAuthor.isBotUser) return
+        // TODO Noodle this is so annoying, but idk how to fix it, the bot response to a slash command is not a bot user
+        if (event.messageAuthor.isBotUser || event.messageAuthor.name.lowercase().contains("lorena")) return
         // First we check if the message contains any of the names
         if (Units.AUTO_CONVERSION_NAMES.none { message.contains("$it\\b".toRegex()) }) return
 
@@ -50,7 +52,7 @@ class UnitConversionService {
                 u.corresponding()?.let { c ->
                     (u to c).autoConverter()?.let { converter ->
                         val convertedValue: Double? = try {
-                            converter.convert(value.toDouble())
+                            converter.convert(value)
                         } catch (e: ConversionException) {
                             logger.warn("ConversionException: {} to {}", u, c, e)
                             null
@@ -63,6 +65,18 @@ class UnitConversionService {
 
         val msg = converted.joinToString(", ")
         event.channel.sendMessage(msg)
+    }
+
+    fun convert(
+        fromUnit: Units,
+        toUnit: Units,
+        amount: String,
+    ): String? {
+        val unitConverter = fromUnit.unit.getConverterTo(toUnit.unit)
+        if (!amount.isNumeric()) return null
+
+        val converted = unitConverter.convert(amount.toDouble())
+        return "${amount.toDouble().digits(3)} ${fromUnit.printedName} is ${converted.digits(3)} ${toUnit.printedName}"
     }
 
     private fun String.isNumeric(): Boolean {
