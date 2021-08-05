@@ -1,6 +1,5 @@
 package com.buffer.lorena.service
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
@@ -8,9 +7,6 @@ import org.javacord.api.event.message.MessageCreateEvent
 import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.stereotype.Service
 import org.springframework.web.client.HttpClientErrorException
-import java.lang.Exception
-import java.net.http.HttpClient
-import kotlin.math.log
 
 @Service
 class RedditService (
