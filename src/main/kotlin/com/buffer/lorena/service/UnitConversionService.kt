@@ -72,6 +72,7 @@ class UnitConversionService {
         toUnit: Units,
         amount: String,
     ): String? {
+        if (!fromUnit.unit.isCompatible(toUnit.unit)) return "These units do not match"
         val unitConverter = fromUnit.unit.getConverterTo(toUnit.unit)
         if (!amount.isNumeric()) return null
 

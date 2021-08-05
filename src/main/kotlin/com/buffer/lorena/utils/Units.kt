@@ -12,7 +12,7 @@ import javax.measure.unit.Unit as JUnit
 enum class Units(val unit: JUnit<*>, val printedName: String, val ciNames: List<String>, vararg val csNames: String) {
     // Base units
     KELVIN(SI.KELVIN, "K", listOf("kelvin"), "K"),
-    KILOGRAM(SI.KILOGRAM, "kg", listOf("kg, kilogram", "kgs", "kilograms")),
+    KILOGRAM(SI.KILOGRAM, "kg", listOf("kg", "kilogram", "kgs", "kilograms")),
     METRE(SI.METRE, "m", listOf("metre", "meter", "meters", "metres", "m")),
     SECOND(SI.SECOND, "sec", listOf("second", "seconds", "s")),
 
