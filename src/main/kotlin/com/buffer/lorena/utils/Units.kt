@@ -1,5 +1,7 @@
 package com.buffer.lorena.utils
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.util.*
 import javax.measure.converter.UnitConverter
 import javax.measure.quantity.Area
@@ -9,59 +11,59 @@ import javax.measure.unit.SI
 import javax.measure.unit.SI.*
 import javax.measure.unit.Unit as JUnit
 
-enum class Units(val unit: JUnit<*>, val printedName: String, val ciNames: List<String>, vararg val csNames: String) {
+enum class Units(val unit: JUnit<*>, val printedName: String, vararg val ciNames: String) {
     // Base units
-    KELVIN(SI.KELVIN, "K", listOf("kelvin"), "K"),
-    KILOGRAM(SI.KILOGRAM, "kg", listOf("kg", "kilogram", "kgs", "kilograms")),
-    METRE(SI.METRE, "m", listOf("metre", "meter", "meters", "metres", "m")),
-    SECOND(SI.SECOND, "sec", listOf("second", "seconds", "s")),
+    KELVIN(SI.KELVIN, "K", "kelvin", "k"),
+    KILOGRAM(SI.KILOGRAM, "kg", "kg", "kilogram", "kgs", "kilograms"),
+    METRE(SI.METRE, "m", "metre", "meter", "meters", "metres", "m"),
+    SECOND(SI.SECOND, "sec", "second", "seconds", "s"),
 
     // Derived units
-    GRAM(SI.GRAM, "g", listOf("gram", "grams", "g")),
-    CELSIUS(SI.CELSIUS, "°C", listOf("celsius", "°c", "°"), "C"),
+    GRAM(SI.GRAM, "g", "gram", "grams", "g"),
+    CELSIUS(SI.CELSIUS, "°C", "celsius", "°c", "°", "c"),
     // Double
-    SQUARE_METRE(SI.SQUARE_METRE, "m²", listOf("m²", "m2", "square meter", "square meters")),
-    KILOMETRE(SI.KILOMETRE, "km", listOf("km", "kilometre", "kilometres", "kilometer", "kilometers")),
-    CENTIMETRE(SI.CENTIMETRE, "cm", listOf("cm", "centimetre", "centimetres", "centimeter", "centimeters")),
-    MILLIMETRE(SI.MILLIMETRE, "mm", listOf("mm", "millimetre", "millimeters", "millimeter", "millimeters")),
+    SQUARE_METRE(SI.SQUARE_METRE, "m²", "m²", "m2", "square meter", "square meters"),
+    KILOMETRE(SI.KILOMETRE, "km", "km", "kilometre", "kilometres", "kilometer", "kilometers"),
+    CENTIMETRE(SI.CENTIMETRE, "cm", "cm", "centimetre", "centimetres", "centimeter", "centimeters"),
+    MILLIMETRE(SI.MILLIMETRE, "mm", "mm", "millimetre", "millimeters", "millimeter", "millimeters"),
 
     // Non SI
-    FOOT(NonSI.FOOT, "ft", listOf("ft", "foot", "feet")),
+    FOOT(NonSI.FOOT, "ft", "ft", "foot", "feet"),
     // Double
-    SQUARE_FOOT(ProductUnit<Area>(NonSI.FOOT.times(NonSI.FOOT)), "ft²", listOf("ft2", "ft²", "sq ft", "sq. ft", "square feet")),
-    YARD(NonSI.YARD, "yd", listOf("yard", "yards", "yd")),
-    INCH(NonSI.INCH, "in", listOf("inch", "inches", "in", """"""")),
-    MILE(NonSI.MILE, "mi", listOf("mile", "miles", "mi")),
+    SQUARE_FOOT(ProductUnit<Area>(NonSI.FOOT.times(NonSI.FOOT)), "ft²", "ft2", "ft²", "sq ft", "sq. ft", "square feet"),
+    YARD(NonSI.YARD, "yd", "yard", "yards", "yd"),
+    INCH(NonSI.INCH, "in", "inch", "inches", "in", """""""),
+    MILE(NonSI.MILE, "mi", "mile", "miles", "mi"),
 
-    MINUTE(NonSI.MINUTE, "min", listOf("min", "minute", "minutes")),
-    HOUR(NonSI.HOUR, "hr", listOf("hours", "hour", "hr", "h")),
-    DAY(NonSI.DAY, "d", listOf("days", "day", "d")),
-    WEEK(NonSI.WEEK, "w", listOf("weeks", "week", "w")),
-    YEAR(NonSI.YEAR, "yr", listOf("year", "years", "yr")),
-    MONTH(NonSI.MONTH, "mths", listOf("month", "months", "mo")),
+    MINUTE(NonSI.MINUTE, "min", "min", "minute", "minutes"),
+    HOUR(NonSI.HOUR, "hr", "hours", "hour", "hr", "h"),
+    DAY(NonSI.DAY, "d", "days", "day", "d"),
+    WEEK(NonSI.WEEK, "w", "weeks", "week", "w"),
+    YEAR(NonSI.YEAR, "yr", "year", "years", "yr"),
+    MONTH(NonSI.MONTH, "mths", "month", "months", "mo"),
 
-    POUND(NonSI.POUND, "lbs", listOf("pound", "pounds", "lb", "lbs")),
-    OUNCE(NonSI.OUNCE, "oz", listOf("ounce", "ounces", "oz")),
-    TON(NonSI.METRIC_TON, "t", listOf("ton", "tonne", "tons", "tonnes", "t")),
+    POUND(NonSI.POUND, "lbs", "pound", "pounds", "lb", "lbs"),
+    OUNCE(NonSI.OUNCE, "oz", "ounce", "ounces", "oz"),
+    TON(NonSI.METRIC_TON, "t", "ton", "tonne", "tons", "tonnes", "t"),
     // Double
-    US_TON(NonSI.TON_US, "us t", listOf("us ton", "us tons", "imperial ton", "imperial tons")),
+    US_TON(NonSI.TON_US, "us t", "us ton", "us tons", "imperial ton", "imperial tons"),
 
-    FAHRENHEIT(NonSI.FAHRENHEIT, "°F", listOf("°F", "fahrenheit"), "F"),
+    FAHRENHEIT(NonSI.FAHRENHEIT, "°F", "°F", "fahrenheit", "f"),
 
-    KMH(NonSI.KILOMETRES_PER_HOUR, "km/h", listOf("km/h", "kmh", "kph")),
-    MPH(NonSI.MILES_PER_HOUR, "mph", listOf("mph")),
+    KMH(NonSI.KILOMETRES_PER_HOUR, "km/h", "km/h", "kmh", "kph"),
+    MPH(NonSI.MILES_PER_HOUR, "mph", "mph"),
 
-    LITRE(NonSI.LITRE, "l", listOf("l", "litre", "litres", "liter", "liters")),
-    MILLILITRE(MILLI(NonSI.LITRE), "ml", listOf("ml", "millilitre", "milliliter", "millilitres", "milliliters")),
-    CENTILITRE(CENTI(NonSI.LITRE), "cl", listOf("cl", "centilitre", "centilitres", "centiliter", "centiliters")),
-    DECILITRE(DECI(NonSI.LITRE), "dl", listOf("dl", "decilitre", "decilitres", "deciliter", "deciliters")),
+    LITRE(NonSI.LITRE, "l", "l", "litre", "litres", "liter", "liters"),
+    MILLILITRE(MILLI(NonSI.LITRE), "ml", "ml", "millilitre", "milliliter", "millilitres", "milliliters"),
+    CENTILITRE(CENTI(NonSI.LITRE), "cl", "cl", "centilitre", "centilitres", "centiliter", "centiliters"),
+    DECILITRE(DECI(NonSI.LITRE), "dl", "dl", "decilitre", "decilitres", "deciliter", "deciliters"),
     // Double
-    LIQUID_OUNCE(NonSI.OUNCE_LIQUID_US, "fl. oz", listOf("liquid ounce", "liquid ounces", "fl oz", "fl. oz")),
-    US_GALLON(NonSI.GALLON_LIQUID_US, "gal", listOf("gallon", "gallons", "gal")),
-    CUP(NonSI.LITRE.times(0.236588), "cups", listOf("cup", "cups")),
+    LIQUID_OUNCE(NonSI.OUNCE_LIQUID_US, "fl. oz", "liquid ounce", "liquid ounces", "fl oz", "fl. oz"),
+    US_GALLON(NonSI.GALLON_LIQUID_US, "gal", "gallon", "gallons", "gal"),
+    CUP(NonSI.LITRE.times(0.236588), "cups", "cup", "cups"),
 
     // Jokes
-    GIRLS(CUP.unit.divide(2), "girls", listOf("girls", "girl"))
+    GIRLS(CUP.unit.divide(2), "girls", "girls", "girl")
     ;
 
     companion object {
@@ -114,8 +116,8 @@ enum class Units(val unit: JUnit<*>, val printedName: String, val ciNames: List<
             CUP to MILLILITRE,
         )
 
-        val AUTO_CONVERSION_NAMES: Set<String> = AUTO_CONVERSION.flatMap { it.ciNames + it.csNames }.toSet()
-        val ALL_NAMES: Set<String> = values().flatMap { it.ciNames + it.csNames }.toSet()
+        val AUTO_CONVERSION_NAMES: Set<String> = AUTO_CONVERSION.flatMap { it.ciNames.toSet() }.toSet()
+        val ALL_NAMES: Set<String> = values().flatMap { it.ciNames.toSet() }.toSet()
 
         fun Units.corresponding(): Units? = AUTO_CONVERTERS[this]
 
@@ -130,18 +132,18 @@ enum class Units(val unit: JUnit<*>, val printedName: String, val ciNames: List<
         fun matchAuto(
             first: String,
             second: String? = null,
-        ): Units? = match(first, second, AUTO_CONVERSION)
+        ): Units? = match(first.trim(), second?.trim(), AUTO_CONVERSION)
 
         fun matchAll(
             first: String,
             second: String? = null,
-        ): Units? = match(first, second, values())
+        ): Units? = match(first.trim(), second?.trim(), values())
 
         private fun splitToken(
             token: String,
             collection: Set<String>
         ): List<String> {
-            return collection.find { token.contains("$it\\b".toRegex()) }?.let {
+            return collection.find { token.contains("\\d$it\\b".toRegex()) }?.let {
                 val first = token.substring(0 until token.length - it.length)
                 if (first.toDoubleOrNull() != null) listOf(first, it) else listOf(token)
             } ?: listOf(token)
@@ -152,12 +154,9 @@ enum class Units(val unit: JUnit<*>, val printedName: String, val ciNames: List<
             second: String?,
             collection: Array<Units>
         ): Units? {
-            // We will do three runs to check for matches
+            // We will do two runs to check for matches
             return collection.find {
-                // First run is checking for case sensitive matches
-                first in it.csNames
-            } ?: collection.find {
-                // Then we check insensitive mathes
+                // First we check insensitive matches
                 first.lowercase(Locale.ROOT) in it.ciNames
             } ?: if (second != null ) collection.find {
                 // Then we check for double matches
