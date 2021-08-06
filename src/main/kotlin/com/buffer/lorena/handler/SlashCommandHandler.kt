@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component
 class SlashCommandHandler (
     discordService: DiscordService,
     private val commandServices: List<CommandService>,
+    private val lorenaService: LorenaService,
 ) {
     private val logger: Logger = LogManager.getLogger(SlashCommandHandler::class.java)
     private val api: DiscordApi = discordService.discordApi
