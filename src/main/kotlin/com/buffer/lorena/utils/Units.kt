@@ -46,7 +46,7 @@ enum class Units(val unit: JUnit<*>, val printedName: String, val ciNames: List<
     // Double
     US_TON(NonSI.TON_US, "us t", listOf("us ton", "us tons", "imperial ton", "imperial tons")),
 
-    FAHRENHEIT(NonSI.FAHRENHEIT, "°F", listOf("°F", "fahrenheit"), "F"),
+    FAHRENHEIT(NonSI.FAHRENHEIT, "°F", listOf("°f", "fahrenheit"), "F"),
 
     KMH(NonSI.KILOMETRES_PER_HOUR, "km/h", listOf("km/h", "kmh", "kph")),
     MPH(NonSI.MILES_PER_HOUR, "mph", listOf("mph")),
@@ -157,7 +157,7 @@ enum class Units(val unit: JUnit<*>, val printedName: String, val ciNames: List<
                 // First run is checking for case sensitive matches
                 first in it.csNames
             } ?: collection.find {
-                // Then we check insensitive mathes
+                // Then we check insensitive matches
                 first.lowercase(Locale.ROOT) in it.ciNames
             } ?: if (second != null ) collection.find {
                 // Then we check for double matches
