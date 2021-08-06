@@ -72,10 +72,10 @@ class UnitConversionCommandService(
         }
     }
 
-    override fun registerCommand(server: Server) {
+    override fun registerCommand(api: DiscordApi) {
         SlashCommand.with(
             command, "Convert from and to units of measurement",
             options,
-        ).createForServer(server).join()
+        ).createGlobal(api).join()
     }
 }

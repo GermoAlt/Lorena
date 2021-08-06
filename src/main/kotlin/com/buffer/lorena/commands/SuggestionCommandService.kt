@@ -48,10 +48,10 @@ class SuggestionCommandService(
         lorenaService.handleSuggestion(suggestion)
     }
 
-    override fun registerCommand(server: Server) {
+    override fun registerCommand(api: DiscordApi) {
         SlashCommand.with(
             command, "Create a suggestion",
             options,
-        ).createForServer(server).join()
+        ).createGlobal(api).join()
     }
 }

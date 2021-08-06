@@ -24,7 +24,7 @@ class InvalidCommandService : CommandService {
         slashCommandInteraction.createImmediateResponder().setContent("call the code monkey bc this shit dont work lmao").respond()
     }
 
-    override fun registerCommand(server: Server) {
+    override fun registerCommand(api: DiscordApi) {
         TODO("Not yet implemented")
     }
 }

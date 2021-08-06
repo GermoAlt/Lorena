@@ -17,6 +17,6 @@ interface CommandService {
         slashCommandInteraction: SlashCommandInteraction,
     )
     fun registerCommand(
-        server: Server,
+        api: DiscordApi,
     )
 }

@@ -8,16 +8,11 @@ import com.buffer.lorena.commands.InvalidCommandService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.javacord.api.DiscordApi;
-import org.javacord.api.entity.server.Server;
-import org.javacord.api.event.interaction.SlashCommandCreateEvent;
-import org.javacord.api.interaction.SlashCommand;
-import org.javacord.api.interaction.SlashCommandInteraction;
-import org.javacord.api.interaction.SlashCommandOption;
-import org.javacord.api.interaction.SlashCommandOptionType;
-import org.jetbrains.annotations.NotNull;
+import org.javacord.api.interaction.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,8 +25,6 @@ public class SlashCommandHandler {
     private final LorenaService lorenaService;
     private final DiscordApi api;
     private final List<CommandService> commandServices;
-    private static final String SUGGESTION_COMMAND_NAME = "suggest";
-    private static final String SUGGESTION_OPTION_NAME = "suggestion";
 
     /**
      * Instantiates a new Slash command handler.
@@ -46,23 +39,19 @@ public class SlashCommandHandler {
         this.lorenaService = lorenaService;
         this.commandServices = commandServices;
         api = discordService.getDiscordApi();
-        registerSlashCommands(api.getServerById(774734597816713216L).get());
+        registerSlashCommands(api);
         registerSlashCommandsListener();
     }
 
     /**
      * Register slash commands.
      *
-     * @param server the server
+     * @param api the api
      */
-    public void registerSlashCommands(Server server){
-        commandServices.forEach(commandService -> commandService.registerCommand(server));
-//        SlashCommand.with(SUGGESTION_COMMAND_NAME, "Create a suggestion",
-//            List.of(
-//                    SlashCommandOption.create(SlashCommandOptionType.STRING, SUGGESTION_OPTION_NAME, "The suggestion", true)
-//        ))
-//        .createForServer(server)
-//        .join();
+    public void registerSlashCommands(DiscordApi api){
+//        api.bulkOverwriteServerSlashCommands(api.getServerById(774734597816713216L).get(), new ArrayList<>());
+//        api.bulkOverwriteGlobalSlashCommands(new ArrayList<>());
+        commandServices.forEach(commandService -> commandService.registerCommand(api));
     }
 
     private void registerSlashCommandsListener(){
@@ -72,20 +61,6 @@ public class SlashCommandHandler {
                     .filter(commandService -> commandService.applies(slashCommandInteraction.getCommandName()))
                     .findFirst().orElseGet(InvalidCommandService::new)
                     .commandListener(event, api, slashCommandInteraction);
-//            switch (slashCommandInteraction.getCommandName()){
-//                case SUGGESTION_COMMAND_NAME:
-//                    logger.info(event.getInteraction());
-//                    slashCommandInteraction.createImmediateResponder().setContent("Suggestion noted.").respond();
-//                    Suggestion suggestion = new Suggestion(slashCommandInteraction.getOptionByName(SUGGESTION_OPTION_NAME).get().getStringValue().get(),
-//                            slashCommandInteraction.getUser(),
-//                            slashCommandInteraction.getServer().get(),
-//                            api);
-//                    this.lorenaService.handleSuggestion(suggestion);
-//                    break;
-//                default:
-//                    slashCommandInteraction.createImmediateResponder().setContent("call the code monkey bc this shit dont work lmao").respond();
-//                    break;
-//            }
         });
     }
 }
