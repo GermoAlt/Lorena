@@ -63,7 +63,14 @@ enum class Units(val unit: JUnit<*>, val printedName: String, vararg val ciNames
     CUP(NonSI.LITRE.times(0.236588), "cups", "cup", "cups"),
 
     // Jokes
-    GIRLS(CUP.unit.divide(2), "girls", "girls", "girl")
+    GIRLS(CUP.unit.divide(2), "girls", "girls", "girl"),
+
+    // According to journalistenheder.dk:
+    ROUND_TOWERS(METRE.unit.times(34.8), "round towers", "round tower", "round towers"),
+    MARATHONS(METRE.unit.times(42195), "marathons", "marathons", "marathon"),
+    LOADED_JUMBO_JETS(KILOGRAM.unit.times(442000), "loaded jumbo jets", "loaded jumbo jets", "loaded jumbo jet"),
+    USAIN_BOLT(KMH.unit.times(37.58), "Usain Bolt's average speed", "usain bolts", "usain bolts average speed"),
+    REALTOR_STONE_THROW(METRE.unit.times(943), "Realtor's stone throws", "stone throw", "stone throws"),
     ;
 
     companion object {

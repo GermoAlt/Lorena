@@ -13,18 +13,6 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
-class Dummy {
-    private lateinit var _something: String
-    val something: String get() = _something
-
-    private val _aList: MutableList<String> = mutableListOf()
-    val aList: List<String> get() = _aList
-
-    fun imstupid() {
-        (aList as MutableList).add("")
-    }
-}
-
 @Service
 class UnitConversionCommandService(
     private val unitConversionService: UnitConversionService
