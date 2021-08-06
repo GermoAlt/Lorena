@@ -4,7 +4,6 @@ import com.buffer.lorena.service.UnitConversionService
 import com.buffer.lorena.utils.Units
 import com.buffer.lorena.utils.orNull
 import org.javacord.api.DiscordApi
-import org.javacord.api.entity.server.Server
 import org.javacord.api.event.interaction.SlashCommandCreateEvent
 import org.javacord.api.interaction.SlashCommand
 import org.javacord.api.interaction.SlashCommandInteraction
@@ -13,6 +12,18 @@ import org.javacord.api.interaction.SlashCommandOptionType
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+
+class Dummy {
+    private lateinit var _something: String
+    val something: String get() = _something
+
+    private val _aList: MutableList<String> = mutableListOf()
+    val aList: List<String> get() = _aList
+
+    fun imstupid() {
+        (aList as MutableList).add("")
+    }
+}
 
 @Service
 class UnitConversionCommandService(
@@ -28,17 +39,17 @@ class UnitConversionCommandService(
                 SlashCommandOptionType.STRING,
                 "amount",
                 "The amount to convert",
-                true
+                true,
             ), SlashCommandOption.create(
                 SlashCommandOptionType.STRING,
                 "from",
                 "The unit to convert from",
-                true
+                true,
             ), SlashCommandOption.create(
                 SlashCommandOptionType.STRING,
                 "to",
                 "The unit to convert to",
-                true
+                true,
             )
         )
 
@@ -47,7 +58,7 @@ class UnitConversionCommandService(
     override fun commandListener(
         event: SlashCommandCreateEvent,
         api: DiscordApi,
-        slashCommandInteraction: SlashCommandInteraction
+        slashCommandInteraction: SlashCommandInteraction,
     ) {
         logger.info(event.interaction.toString())
         val fromAmount = slashCommandInteraction.getOptionByName(options[0].name).orNull?.stringValue?.orNull

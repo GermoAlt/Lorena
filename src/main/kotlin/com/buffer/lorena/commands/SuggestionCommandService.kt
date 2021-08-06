@@ -1,7 +1,6 @@
 package com.buffer.lorena.commands
 
 import com.buffer.lorena.bot.entity.Suggestion
-import com.buffer.lorena.bot.handler.SlashCommandHandler
 import com.buffer.lorena.bot.service.LorenaService
 import com.buffer.lorena.utils.orNull
 import org.javacord.api.DiscordApi
