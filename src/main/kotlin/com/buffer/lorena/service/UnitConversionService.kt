@@ -18,6 +18,11 @@ import javax.measure.converter.ConversionException
 class UnitConversionService {
     private val logger: Logger = LogManager.getLogger(UnitConversionService::class.java)
 
+    private val specials: List<Char> = listOf(
+        '!', '\\', '$', '%', '^', '&', '*', '(', ')', '-', '_', '=', '+', '|', '~', '`', '{', '}', '[', ']', ':', ';',
+        '"', '\'', '<', '>', '?', '/', ',', '.'
+    )
+
     fun parseMessage(
         message: String,
         event: MessageCreateEvent,
@@ -30,9 +35,10 @@ class UnitConversionService {
         logger.info("Message contains a unit name")
 
         // Split tokens if they end on a conversion unit
-        val tokens = message.split("""\s""".toRegex()).flatMap {
-            Units.splitTokenAuto(it)
-        }.filterNot { it.isBlank() }
+        val tokens = message.split("""\s""".toRegex())
+            .map { it.removeTrailingSpecials() }
+            .flatMap { Units.splitTokenAuto(it) }
+            .filterNot { it.isBlank() }
 
         val forConversion = tokens.mapIndexedNotNull { index, token ->
             when {
@@ -88,4 +94,7 @@ class UnitConversionService {
         DecimalFormat("0.${"#".repeat(digits)}", DecimalFormatSymbols.getInstance(Locale.ROOT)).apply {
                 roundingMode = RoundingMode.HALF_UP
         }.format(this)
+
+    private fun String.removeTrailingSpecials(): String =
+        if (this.lastOrNull() !in specials) this else this.substring(0 until (length-1)).removeTrailingSpecials()
 }
