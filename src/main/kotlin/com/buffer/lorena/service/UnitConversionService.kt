@@ -30,9 +30,6 @@ class UnitConversionService {
         // TODO Noodle this is so annoying, but idk how to fix it, the bot response to a slash command is not a bot user
         if (event.messageAuthor.isBotUser || event.messageAuthor.name.lowercase().contains("lorena")) return
         // First we check if the message contains any of the names
-        if (Units.AUTO_CONVERSION_NAMES.none { message.contains("$it\\b".toRegex()) }) return
-
-        logger.info("Message contains a unit name")
 
         // Split tokens if they end on a conversion unit
         val tokens = message.split("""\s""".toRegex())

@@ -49,26 +49,28 @@ class UnitConversionCommandService(
         slashCommandInteraction: SlashCommandInteraction,
     ) {
         logger.info(event.interaction.toString())
-        val fromAmount = slashCommandInteraction.getOptionByName(options[0].name).orNull?.stringValue?.orNull
-        val fromUnit = slashCommandInteraction.getOptionByName(options[1].name).orNull?.stringValue?.orNull
-        val toUnit = slashCommandInteraction.getOptionByName(options[2].name).orNull?.stringValue?.orNull
-        if (fromAmount == null || fromUnit == null || toUnit == null) {
-            slashCommandInteraction.createImmediateResponder().setContent("One of the arguments are invalid").respond()
-            return
-        }
-        val fromUnits = Units.matchAll(fromUnit)
-        val toUnits = Units.matchAll(toUnit)
-        if (fromUnits == null || toUnits == null) {
-            slashCommandInteraction.createImmediateResponder().setContent("One of those units are unknown").respond()
-        } else {
-            val response = unitConversionService.convert(fromUnits, toUnits, fromAmount)
-            if (response == null) {
-                slashCommandInteraction.createImmediateResponder().setContent("The amount is not a valid number").respond()
-            } else {
-                slashCommandInteraction.createImmediateResponder().setContent(response).respond()
+        slashCommandInteraction.respondLater().thenAccept {
+            val fromAmount = slashCommandInteraction.getOptionByName(options[0].name).orNull?.stringValue?.orNull
+            val fromUnit = slashCommandInteraction.getOptionByName(options[1].name).orNull?.stringValue?.orNull
+            val toUnit = slashCommandInteraction.getOptionByName(options[2].name).orNull?.stringValue?.orNull
+            if (fromAmount == null || fromUnit == null || toUnit == null) {
+                it.setContent("One of the arguments are invalid").update()
+                return@thenAccept
             }
+            val fromUnits = Units.matchAll(fromUnit)
+            val toUnits = Units.matchAll(toUnit)
+            if (fromUnits == null || toUnits == null) {
+                it.setContent("One of those units are unknown").update()
+            } else {
+                val response = unitConversionService.convert(fromUnits, toUnits, fromAmount)
+                if (response == null) {
+                    it.setContent("The amount is not a valid number").update()
+                } else {
+                    it.setContent(response).update()
+                }
 
-        }
+            }
+        }.get()
     }
 
     override fun registerCommand(api: DiscordApi) {
