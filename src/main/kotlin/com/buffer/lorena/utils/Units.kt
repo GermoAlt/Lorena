@@ -150,7 +150,7 @@ enum class Units(val unit: JUnit<*>, val printedName: String, vararg val ciNames
             token: String,
             collection: Set<String>
         ): List<String> {
-            return collection.find { token.contains("\\d$it\\b".toRegex()) }?.let {
+            return collection.find { token.lowercase(Locale.ROOT).contains("\\d$it\\b".toRegex()) }?.let {
                 val first = token.substring(0 until token.length - it.length)
                 if (first.toDoubleOrNull() != null) listOf(first, it) else listOf(token)
             } ?: listOf(token)
