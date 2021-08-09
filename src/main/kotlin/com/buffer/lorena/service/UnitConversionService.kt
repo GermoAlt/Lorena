@@ -6,6 +6,7 @@ import com.buffer.lorena.utils.Units.Companion.corresponding
 import com.buffer.lorena.utils.orNull
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
+import org.javacord.api.entity.message.MessageType
 import org.javacord.api.event.message.MessageCreateEvent
 import org.springframework.stereotype.Service
 import java.math.RoundingMode
@@ -27,8 +28,7 @@ class UnitConversionService {
         message: String,
         event: MessageCreateEvent,
     ) {
-        // TODO Noodle this is so annoying, but idk how to fix it, the bot response to a slash command is not a bot user
-        if (event.messageAuthor.isBotUser || event.messageAuthor.name.lowercase().contains("lorena")) return
+        if (event.messageAuthor.isBotUser || event.message.type.equals(MessageType.SLASH_COMMAND)) return
         // First we check if the message contains any of the names
 
         // Split tokens if they end on a conversion unit
