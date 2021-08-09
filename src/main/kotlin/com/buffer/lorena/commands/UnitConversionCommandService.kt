@@ -3,21 +3,21 @@ package com.buffer.lorena.commands
 import com.buffer.lorena.service.UnitConversionService
 import com.buffer.lorena.utils.Units
 import com.buffer.lorena.utils.orNull
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 import org.javacord.api.DiscordApi
 import org.javacord.api.event.interaction.SlashCommandCreateEvent
 import org.javacord.api.interaction.SlashCommand
 import org.javacord.api.interaction.SlashCommandInteraction
 import org.javacord.api.interaction.SlashCommandOption
 import org.javacord.api.interaction.SlashCommandOptionType
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
 class UnitConversionCommandService(
     private val unitConversionService: UnitConversionService
 ): CommandService {
-    private val logger: Logger = LoggerFactory.getLogger(UnitConversionCommandService::class.java)
+    private val logger: Logger = LogManager.getLogger(UnitConversionService::class.java)
 
     override val command: String
         get() = "convert"

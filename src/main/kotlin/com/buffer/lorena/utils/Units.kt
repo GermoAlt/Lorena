@@ -95,6 +95,7 @@ enum class Units(val unit: JUnit<*>, val printedName: String, vararg val ciNames
             US_GALLON,
             CUP,
         )
+
         private val AUTO_CONVERTERS: Map<Units, Units> = mapOf(
             KILOGRAM to POUND,
             METRE to FOOT,
@@ -132,9 +133,21 @@ enum class Units(val unit: JUnit<*>, val printedName: String, vararg val ciNames
             this.first.unit.getConverterTo(it.unit)
         }
 
+        fun detectAuto(
+            tokens: List<String>,
+        ): List<Pair<Double, Units?>> = detect(tokens, AUTO_CONVERSION_NAMES, this::matchAuto)
+
+        fun detectAll(
+            tokens: List<String>,
+        ): List<Pair<Double, Units?>> = detect(tokens, ALL_NAMES, this::matchAll)
+
         fun splitTokenAuto(
             token: String,
         ): List<String> = splitToken(token, AUTO_CONVERSION_NAMES)
+
+        fun splitTokenAll(
+            token: String,
+        ): List<String> = splitToken(token, ALL_NAMES)
 
         fun matchAuto(
             first: String,
@@ -146,7 +159,24 @@ enum class Units(val unit: JUnit<*>, val printedName: String, vararg val ciNames
             second: String? = null,
         ): Units? = match(first.trim(), second?.trim(), values())
 
-        private fun splitToken(
+        fun detect(
+            tokens: List<String>,
+            units: Set<String>,
+            matcher: (String, String?) -> Units?
+        ): List<Pair<Double, Units?>> = tokens.mapIndexedNotNull { index, token ->
+            when {
+                index == 0 -> null
+                units.contains(token) && tokens[index-1].isNumeric() ->
+                    tokens[index-1].toDouble() to matcher(token, null)
+                // Liquid ounce fix
+                index > 1 && units.contains("${tokens[index-1]} $token") &&
+                        tokens[index-2].isNumeric() ->
+                    tokens[index-2].toDouble() to matcher(tokens[index-1], token)
+                else -> null
+            }
+        }
+
+        fun splitToken(
             token: String,
             collection: Set<String>
         ): List<String> {
@@ -156,7 +186,7 @@ enum class Units(val unit: JUnit<*>, val printedName: String, vararg val ciNames
             } ?: listOf(token)
         }
 
-        private fun match(
+        fun match(
             first: String,
             second: String?,
             collection: Array<Units>

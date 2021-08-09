@@ -3,26 +3,21 @@ package com.buffer.lorena.service
 import com.buffer.lorena.utils.Units
 import com.buffer.lorena.utils.Units.Companion.autoConverter
 import com.buffer.lorena.utils.Units.Companion.corresponding
-import com.buffer.lorena.utils.orNull
+import com.buffer.lorena.utils.Units.Companion.detectAuto
+import com.buffer.lorena.utils.digits
+import com.buffer.lorena.utils.isNumeric
+import com.buffer.lorena.utils.tokenise
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import org.javacord.api.entity.message.MessageType
 import org.javacord.api.event.message.MessageCreateEvent
 import org.springframework.stereotype.Service
-import java.math.RoundingMode
-import java.text.DecimalFormat
-import java.text.DecimalFormatSymbols
-import java.util.*
 import javax.measure.converter.ConversionException
 
 @Service
 class UnitConversionService {
     private val logger: Logger = LogManager.getLogger(UnitConversionService::class.java)
 
-    private val specials: List<Char> = listOf(
-        '!', '\\', '$', '%', '^', '&', '*', '(', ')', '-', '_', '=', '+', '|', '~', '`', '{', '}', '[', ']', ':', ';',
-        '"', '\'', '<', '>', '?', '/', ',', '.'
-    )
 
     fun parseMessage(
         message: String,
@@ -32,23 +27,9 @@ class UnitConversionService {
         // First we check if the message contains any of the names
 
         // Split tokens if they end on a conversion unit
-        val tokens = message.split("""\s""".toRegex())
-            .map { it.removeTrailingSpecials() }
-            .flatMap { Units.splitTokenAuto(it) }
-            .filterNot { it.isBlank() }
+        val tokens = tokeniseMessage(message)
 
-        val forConversion = tokens.mapIndexedNotNull { index, token ->
-            when {
-                index == 0 -> null
-                Units.AUTO_CONVERSION_NAMES.contains(token) && tokens[index-1].isNumeric() ->
-                    tokens[index-1].toDouble() to Units.matchAuto(token)
-                // Liquid ounce fix
-                index > 1 && Units.AUTO_CONVERSION_NAMES.contains("${tokens[index-1]} $token") &&
-                        tokens[index-2].isNumeric() ->
-                    tokens[index-2].toDouble() to Units.matchAuto(tokens[index-1], token)
-                else -> null
-            }
-        }
+        val forConversion = detectAuto(tokens)
 
         val converted = forConversion.mapNotNull { (value, unit) ->
             unit?.let { u ->
@@ -83,15 +64,5 @@ class UnitConversionService {
         return "${amount.toDouble().digits(3)} ${fromUnit.printedName} is ${converted.digits(3)} ${toUnit.printedName}"
     }
 
-    private fun String.isNumeric(): Boolean {
-        return this.toDoubleOrNull() != null
-    }
-
-    private fun Double.digits(digits: Int): String =
-        DecimalFormat("0.${"#".repeat(digits)}", DecimalFormatSymbols.getInstance(Locale.ROOT)).apply {
-                roundingMode = RoundingMode.HALF_UP
-        }.format(this)
-
-    private fun String.removeTrailingSpecials(): String =
-        if (this.lastOrNull() !in specials) this else this.substring(0 until (length-1)).removeTrailingSpecials()
+    private fun tokeniseMessage(message: String): List<String> = tokenise(message, Units.Companion::splitTokenAuto)
 }
