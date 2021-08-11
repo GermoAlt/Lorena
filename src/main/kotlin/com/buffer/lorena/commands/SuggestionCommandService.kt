@@ -40,11 +40,14 @@ class SuggestionCommandService(
         slashCommandInteraction: SlashCommandInteraction,
     ) {
         logger.info(event.interaction.toString())
-        slashCommandInteraction.createImmediateResponder().setContent("Suggestion noted.").respond()
-        val option: String = slashCommandInteraction.getOptionByName(options[0].name).orNull?.stringValue?.orNull ?: return
-        val server: Server = slashCommandInteraction.server.orNull ?: return
-        val suggestion = Suggestion(option, slashCommandInteraction.user, server, api)
-        lorenaService.handleSuggestion(suggestion)
+        slashCommandInteraction.respondLater().thenAccept {
+            val option: String = slashCommandInteraction.getOptionByName(options[0].name).orNull?.stringValue?.orNull ?: return@thenAccept
+            val server: Server = slashCommandInteraction.server.orNull ?: return@thenAccept
+            val suggestion = Suggestion(option, slashCommandInteraction.user, server, api)
+            lorenaService.handleSuggestion(suggestion)
+            it.setContent("Suggestion noted").update()
+            return@thenAccept
+        }.get()
     }
 
     override fun registerCommand(api: DiscordApi) {

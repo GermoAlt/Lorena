@@ -39,6 +39,7 @@ class MessageHandler(
                     "ping" -> event.channel.sendMessage("Pong!")
                     "votes" -> lorenaService.changeUserVoteThreshold(event, parsedMessage[2])
                     "setlorechannel" -> lorenaService.setServerLoreChannel(event, parsedMessage[2])
+                    "setsuggestionchannel" -> lorenaService.setServerSuggestionChannel(event, parsedMessage[2])
                     "dolore" -> lorenaService.sendRandomLore(event)
                     else -> event.channel.sendMessage("fuck off")
                 }
