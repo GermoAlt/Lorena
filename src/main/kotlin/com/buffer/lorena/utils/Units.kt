@@ -64,6 +64,10 @@ enum class Units(val unit: JUnit<*>, val printedName: String, vararg val ciNames
 
     // Jokes
     GIRLS(CUP.unit.divide(2), "girls", "girls", "girl"),
+    JOHNE(INCH.unit.times(26), "JohnEs", "johne", "johnes", "john", "johns"),
+    BANANA(CENTIMETRE.unit.times(13), "bananas", "banana", "bananas"),
+    SCARAMUCCI(DAY.unit.times(10), "Mooches", "mooch", "mooches", "scaramucci", "scaramuccis"),
+    SMOOT(CENTIMETRE.unit.times(170), "Smoots", "smoot", "smoots"),
 
     // According to journalistenheder.dk:
     ROUND_TOWERS(METRE.unit.times(34.8), "round towers", "round tower", "round towers"),
