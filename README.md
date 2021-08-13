@@ -1,2 +1,2 @@
-# Lorena-Java
-Lorena bot in Java
+# Lorena
+Lorena bot in Java/Kotlin
