@@ -3,6 +3,8 @@ package com.buffer.lorena.bot.service;
 import com.buffer.lorena.bot.converter.LorenaConverter;
 import com.buffer.lorena.bot.entity.Lore;
 import com.buffer.lorena.bot.entity.ServerDAO;
+import com.buffer.lorena.bot.repository.LoreRepository;
+import com.buffer.lorena.bot.repository.MessageRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.javacord.api.DiscordApi;
@@ -30,6 +32,7 @@ import java.util.stream.Collectors;
 public class LoreService {
 
     private final LorenaConverter lorenaConverter;
+    private final MessageRepository messageRepository;
 
     private final Environment environment;
     private static final Logger logger = LogManager.getLogger(LoreService.class);
@@ -40,8 +43,9 @@ public class LoreService {
      * @param lorenaConverter the lorena converter
      * @param environment     the environment
      */
-    public LoreService(LorenaConverter lorenaConverter, Environment environment) {
+    public LoreService(LorenaConverter lorenaConverter, MessageRepository messageRepository, Environment environment) {
         this.lorenaConverter = lorenaConverter;
+        this.messageRepository = messageRepository;
         this.environment = environment;
     }
 
@@ -52,7 +56,8 @@ public class LoreService {
      */
     public void handleLoreReaction(ReactionAddEvent event) {
         try {
-            if (!event.requestMessage().get().getAuthor().isBotUser()) {
+            Message message = event.requestMessage().get();
+            if (!message.getAuthor().isBotUser() || (message.getAuthor().isYourself() && !messageRepository.existsByMessageTextAndNotIdUser(message.getContent(), message.getAuthor().getId()))) {
                 Reaction reaction = event.requestReaction().join().get();
                 List<Reaction> list = reaction.getMessage().getReactions().stream()
                         .filter(r -> r.getEmoji().equalsEmoji("📜")).collect(Collectors.toList());
