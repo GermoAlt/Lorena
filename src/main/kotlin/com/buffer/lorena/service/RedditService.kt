@@ -20,25 +20,28 @@ class RedditService (
         redditLink: String,
         event: MessageCreateEvent,
     ) {
-        val url = "https://reddit.com/$redditLink"
-        if (redditLink.length > 23) return
-        if (try {
-            // If about is not t5 for subreddit or t2 for user
-            val json = restTemplate.getForObject("$url/about.json", About::class.java) ?: return
-            (redditLink.startsWith("r/") && json.kind != "t5") ||
-                    (redditLink.startsWith("u/") && json.kind != "t2")
-        } catch (e: HttpClientErrorException) {
-            // If it's a Forbidden, the sub exists, but we can't go to it
-            logger.warn("Caught {}", e::class.simpleName)
-            e !is HttpClientErrorException.Forbidden
-        } catch (e: Exception) {
-            // Other exceptions we log and ignore
-            logger.warn("Caught {}", e::class.simpleName, e)
-            true
-        }) {
-            return
+        var url = "https://reddit.com/$redditLink"
+        if(event.channel.id == 881191793499189299) { //nadharia user url channel
+            url = "https://old.reddit.com/$redditLink/?sort=controversial"
+        } else {
+            if (redditLink.length > 23) return
+            if (try {
+                // If about is not t5 for subreddit or t2 for user
+                val json = restTemplate.getForObject("$url/about.json", About::class.java) ?: return
+                (redditLink.startsWith("r/") && json.kind != "t5") ||
+                        (redditLink.startsWith("u/") && json.kind != "t2")
+            } catch (e: HttpClientErrorException) {
+                // If it's a Forbidden, the sub exists, but we can't go to it
+                logger.warn("Caught {}", e::class.simpleName)
+                e !is HttpClientErrorException.Forbidden
+            } catch (e: Exception) {
+                // Other exceptions we log and ignore
+                logger.warn("Caught {}", e::class.simpleName, e)
+                true
+            }) {
+                return
+            }
         }
-
         event.channel.sendMessage(url)
     }
 }
