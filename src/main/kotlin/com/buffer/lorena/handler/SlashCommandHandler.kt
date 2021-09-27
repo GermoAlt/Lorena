@@ -31,8 +31,8 @@ class SlashCommandHandler (
      * @param api the api
      */
     private fun registerSlashCommands(api: DiscordApi) {
-//        api.bulkOverwriteServerSlashCommands(api.getServerById(774734597816713216L).get(), new ArrayList<>());
-//        api.bulkOverwriteGlobalSlashCommands(new ArrayList<>());
+//        api.bulkOverwriteServerSlashCommands(api.getServerById(774734597816713216L).get(), mutableListOf());
+//        api.bulkOverwriteGlobalSlashCommands(mutableListOf())
         commandServices.forEach { commandService -> commandService.registerCommand(api) }
     }
 
