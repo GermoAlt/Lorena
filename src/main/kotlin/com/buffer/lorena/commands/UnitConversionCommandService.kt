@@ -15,8 +15,8 @@ import org.springframework.stereotype.Service
 
 @Service
 class UnitConversionCommandService(
-    private val unitConversionService: UnitConversionService
-): CommandService {
+    private val unitConversionService: UnitConversionService,
+): CommandService() {
     private val logger: Logger = LoggerFactory.getLogger(UnitConversionCommandService::class.java)
 
     override val command: String
@@ -40,8 +40,6 @@ class UnitConversionCommandService(
                 true,
             )
         )
-
-    override fun applies(c: String): Boolean = c.equals(command, true)
 
     override fun commandListener(
         event: SlashCommandCreateEvent,
@@ -74,8 +72,9 @@ class UnitConversionCommandService(
     }
 
     override fun registerCommand(api: DiscordApi) {
+        logger.info("Registering command $actualCommand")
         SlashCommand.with(
-            command, "Convert from and to units of measurement",
+            actualCommand, "Convert from and to units of measurement",
             options,
         ).createGlobal(api).join()
     }

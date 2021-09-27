@@ -16,8 +16,8 @@ import org.springframework.stereotype.Service
 
 @Service
 class SuggestionCommandService(
-    private val lorenaService: LorenaService
-) : CommandService {
+    private val lorenaService: LorenaService,
+) : CommandService() {
     private val logger: Logger = LoggerFactory.getLogger(SuggestionCommandService::class.java)
 
     override val command: String
@@ -31,8 +31,6 @@ class SuggestionCommandService(
                 true
             )
         )
-
-    override fun applies(c: String): Boolean = c.equals(command, true)
 
     override fun commandListener(
         event: SlashCommandCreateEvent,
@@ -51,6 +49,7 @@ class SuggestionCommandService(
     }
 
     override fun registerCommand(api: DiscordApi) {
+        logger.info("Registering command $actualCommand")
         SlashCommand.with(
             command, "Create a suggestion",
             options,

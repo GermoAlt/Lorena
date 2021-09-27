@@ -1,22 +1,28 @@
 package com.buffer.lorena.commands
 
 import org.javacord.api.DiscordApi
-import org.javacord.api.entity.server.Server
 import org.javacord.api.event.interaction.SlashCommandCreateEvent
 import org.javacord.api.interaction.SlashCommandInteraction
 import org.javacord.api.interaction.SlashCommandOption
+import org.springframework.beans.factory.annotation.Value
 
-interface CommandService {
-    val command: String
-    val options: List<SlashCommandOption>
+abstract class CommandService() {
+    @Value("\${spring.profiles.active}")
+    private var profile: String = ""
 
-    fun applies(c: String): Boolean
-    fun commandListener(
+    abstract val command: String
+    protected val actualCommand: String
+        get() = "${if (profile == "dev") "dev-" else ""}$command"
+    abstract val options: List<SlashCommandOption>
+
+    fun applies(c: String): Boolean = c.equals(actualCommand, true)
+
+    abstract fun commandListener(
         event: SlashCommandCreateEvent,
         api: DiscordApi,
         slashCommandInteraction: SlashCommandInteraction,
     )
-    fun registerCommand(
+    abstract fun registerCommand(
         api: DiscordApi,
     )
 }
