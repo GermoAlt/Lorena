@@ -1,6 +1,7 @@
 package com.buffer.lorena.commands
 
 import com.buffer.lorena.service.UnitConversionService
+import com.buffer.lorena.utils.Currencies
 import com.buffer.lorena.utils.Units
 import com.buffer.lorena.utils.orNull
 import org.javacord.api.DiscordApi
@@ -55,18 +56,22 @@ class UnitConversionCommandService(
                 it.setContent("One of the arguments are invalid").update()
                 return@thenAccept
             }
-            val fromUnits = Units.matchAll(fromUnit)
-            val toUnits = Units.matchAll(toUnit)
-            if (fromUnits == null || toUnits == null) {
-                it.setContent("One of those units are unknown").update()
-            } else {
-                val response = unitConversionService.convert(fromUnits, toUnits, fromAmount)
-                if (response == null) {
-                    it.setContent("The amount is not a valid number").update()
-                } else {
-                    it.setContent(response).update()
-                }
 
+            val response =if (Currencies.parse(fromUnit) != null) {
+                unitConversionService.convertCurrency(fromUnit, toUnit, fromAmount)
+            } else {
+                val fromUnits = Units.matchAll(fromUnit)
+                val toUnits = Units.matchAll(toUnit)
+                if (fromUnits == null || toUnits == null) {
+                    "One of those units are unknown"
+                } else {
+                    unitConversionService.convert(fromUnits, toUnits, fromAmount)
+                }
+            }
+            if (response == null) {
+                it.setContent("The amount is not a valid number").update()
+            } else {
+                it.setContent(response).update()
             }
         }.get()
     }
