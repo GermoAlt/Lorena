@@ -6,7 +6,7 @@ enum class Currencies {
     companion object {
         fun parse(value: String?): Currencies? {
             return if (value == null) null else try {
-                valueOf(value)
+                valueOf(value.uppercase())
             } catch (_: Throwable) {
                 null
             }
