@@ -53,7 +53,7 @@ class UnitConversionCommandService(
             val fromUnit = slashCommandInteraction.getOptionByName(options[1].name).orNull?.stringValue?.orNull
             val toUnit = slashCommandInteraction.getOptionByName(options[2].name).orNull?.stringValue?.orNull
             if (fromAmount == null || fromUnit == null || toUnit == null) {
-                it.setContent("One of the arguments are invalid").update()
+                it.setContent("One of the arguments is invalid").update()
                 return@thenAccept
             }
 
@@ -63,7 +63,7 @@ class UnitConversionCommandService(
                 val fromUnits = Units.matchAll(fromUnit)
                 val toUnits = Units.matchAll(toUnit)
                 if (fromUnits == null || toUnits == null) {
-                    "One of those units are unknown"
+                    "One of those units is unknown"
                 } else {
                     unitConversionService.convert(fromUnits, toUnits, fromAmount)
                 }
