@@ -136,17 +136,20 @@ public class LorenaConverter {
                 convertServer(server).getIdServer(),
                 convertUser(user).getIdUser(),
                 convertMessage(message).getIdMessage());
+        return handleLorePersistance(id);
+    }
+
+    public Lore handleLorePersistance(LoreId id){
         Optional<Lore> lore = loreRepository.findById(id);
         Lore loreResult = null;
         if(lore.isEmpty()){
             loreResult = new Lore(id);
-            loreResult = loreRepository.saveAndFlush(loreResult);
         } else {
             loreResult = lore.get();
             if (loreResult.getCreatedAt() == null) loreResult.setCreatedAt(Timestamp.from(Instant.now()));
             loreResult.setUpdatedAt(Timestamp.from(Instant.now()));
-            loreResult = loreRepository.saveAndFlush(loreResult);
         }
+        loreResult = loreRepository.saveAndFlush(loreResult);
         return loreResult;
     }
 }

@@ -2,15 +2,19 @@ package com.buffer.lorena.bot.service;
 
 import com.buffer.lorena.bot.converter.LorenaConverter;
 import com.buffer.lorena.bot.entity.Lore;
+import com.buffer.lorena.bot.entity.LoreId;
 import com.buffer.lorena.bot.entity.ServerDAO;
 import com.buffer.lorena.bot.repository.LoreRepository;
 import com.buffer.lorena.bot.repository.MessageRepository;
+import com.buffer.lorena.bot.repository.ServerRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.entity.channel.Channel;
+import org.javacord.api.entity.channel.ServerTextChannel;
 import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.message.MessageAuthor;
+import org.javacord.api.entity.message.MessageSet;
 import org.javacord.api.entity.message.Reaction;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.server.Server;
@@ -19,8 +23,9 @@ import org.javacord.api.event.message.reaction.ReactionAddEvent;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.awt.*;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
@@ -32,21 +37,55 @@ import java.util.stream.Collectors;
 public class LoreService {
 
     private final LorenaConverter lorenaConverter;
+    private final ServerRepository serverRepository;
     private final MessageRepository messageRepository;
-
+    private final LoreRepository loreRepository;
+    private final DiscordService discordService;
     private final Environment environment;
+
     private static final Logger logger = LogManager.getLogger(LoreService.class);
+
+    private static final Map<Server, Message[]> loreMap = new HashMap<>();
 
     /**
      * Instantiates a new Lore service.
-     *
      * @param lorenaConverter the lorena converter
+     * @param serverRepository
+     * @param loreRepository
+     * @param discordService
      * @param environment     the environment
      */
-    public LoreService(LorenaConverter lorenaConverter, MessageRepository messageRepository, Environment environment) {
+    public LoreService(LorenaConverter lorenaConverter, ServerRepository serverRepository, MessageRepository messageRepository, LoreRepository loreRepository, DiscordService discordService, Environment environment) {
         this.lorenaConverter = lorenaConverter;
+        this.serverRepository = serverRepository;
         this.messageRepository = messageRepository;
+        this.loreRepository = loreRepository;
+        this.discordService = discordService;
         this.environment = environment;
+    }
+
+    @PostConstruct
+    private void loadLoreMap(){
+        this.serverRepository.findAll().forEach(serverDAO -> {
+            logger.info("fetching from server {}", serverDAO.getName());
+            if (serverDAO.getLoreChannel() != null) {
+                try {
+                    ServerTextChannel loreChannel = this.discordService.getDiscordApi()
+                            .getServerById(serverDAO.getIdServer()).get()
+                            .getChannelById(serverDAO.getLoreChannel()).get()
+                            .asServerTextChannel().get();
+                    MessageSet set = loreChannel.getMessages(100000).join();
+                    loreMap.put(
+                            this.discordService.getDiscordApi().getServerById(serverDAO.getIdServer()).get(),
+                            set.toArray(new Message[0])
+                    );
+                } catch (NoSuchElementException exception) {
+                    logger.error("error fetching from server {}", serverDAO.getName());
+                }
+            } else {
+                logger.warn("lore channel not set for server {}", serverDAO.getName());
+            }
+        });
     }
 
     /**
@@ -128,6 +167,7 @@ public class LoreService {
                     .setTimestampToNow()
                     .addInlineField("Original", "**[Jump to Message]("+buildMessageUrl(server.getIdServer(), channel.getId(), message.getId())+")**")
                     .addInlineField("Channel", "<#"+ channel.getIdAsString()+">")
+                    .addField("Message ID", String.valueOf(message.getId()))
                     .setColor(Color.PINK)
                     .setImage(message.getAttachments().isEmpty() ? null : message.getAttachments().get(0).getUrl().toString());
             event.getApi().getChannelById(server.getLoreChannel()).flatMap(Channel::asTextChannel).get().sendMessage(embed);
@@ -152,4 +192,18 @@ public class LoreService {
                 idMessage.toString();
     }
 
+    public void removeLore(ReactionAddEvent event) {
+        LoreId id = new LoreId(
+                event.getServer().get().getId(),
+                event.getUserId(),
+                event.getMessageId());
+        Optional<Lore> lore = loreRepository.findById(id);
+        if (lore.isPresent()) {
+            loreRepository.deleteById(id);
+        }
+    }
+
+    public Message[] getLoresFromServer(Server server){
+        return loreMap.get(server);
+    }
 }

@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "com.buffer"
-version = "1.5.0-SNAPSHOT"
+version = "2.0.0-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 
@@ -43,7 +43,7 @@ dependencies {
 	implementation("org.javacord:javacord:3.3.2")
 
 	// To make jackson work with kotlin
-	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.11.4")
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.1")
 
 	// Unit conversion
 	implementation("org.jscience:jscience:4.3.1")
@@ -62,7 +62,7 @@ dependencies {
 
 
 	//log4j
-	runtimeOnly("org.apache.logging.log4j:log4j-core:2.11.0")
+	runtimeOnly("org.apache.logging.log4j:log4j-core:2.17.0")
 
 
 	// As if you're doing tests...

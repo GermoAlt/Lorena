@@ -1,7 +1,6 @@
 package com.buffer.lorena.bot.service;
 
 import com.buffer.lorena.bot.converter.LorenaConverter;
-import com.buffer.lorena.bot.entity.MessageDAO;
 import com.buffer.lorena.bot.entity.ServerDAO;
 import com.buffer.lorena.bot.entity.Suggestion;
 import com.buffer.lorena.bot.repository.LoreRepository;
@@ -10,12 +9,16 @@ import com.buffer.lorena.bot.repository.ServerRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.javacord.api.entity.channel.Channel;
+import org.javacord.api.entity.message.Message;
+import org.javacord.api.entity.message.embed.Embed;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
+import org.javacord.api.entity.message.embed.EmbedImage;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.springframework.stereotype.Service;
 
 import java.awt.*;
+import java.io.IOException;
 import java.util.Random;
 
 /**
@@ -25,6 +28,7 @@ import java.util.Random;
 public class MessageService {
     private final Logger logger = LogManager.getLogger(MessageService.class);
     private final LorenaConverter lorenaConverter;
+    private final LoreService loreService;
     private final ServerRepository serverRepository;
     private final LoreRepository loreRepository;
     private final MessageRepository messageRepository;
@@ -32,15 +36,16 @@ public class MessageService {
 
     /**
      * Instantiates a new Message service.
-     *
-     * @param lorenaConverter   the lorena converter
+     *  @param lorenaConverter   the lorena converter
+     * @param loreService
      * @param serverRepository  the server repository
      * @param loreRepository    the lore repository
      * @param messageRepository the message repository
      */
-    public MessageService(LorenaConverter lorenaConverter, ServerRepository serverRepository,
+    public MessageService(LorenaConverter lorenaConverter, LoreService loreService, ServerRepository serverRepository,
                           LoreRepository loreRepository, MessageRepository messageRepository) {
         this.lorenaConverter = lorenaConverter;
+        this.loreService = loreService;
         this.serverRepository = serverRepository;
         this.loreRepository = loreRepository;
         this.messageRepository = messageRepository;
@@ -88,11 +93,29 @@ public class MessageService {
      * @param event the event
      */
     public void sendRandomLore(MessageCreateEvent event) {
-        long serverId = event.getServer().get().getId();
-        int totalLoreCount = loreRepository.findTotalLoreCountByIdServer(serverId);
-        MessageDAO m = messageRepository.findById(loreRepository.findAllByIdServer(serverId).get(random.nextInt(totalLoreCount-1)).getIdMessage()).get();
-        logger.info("Sending random lore: {}", m.getMessageText());
-        event.getChannel().sendMessage(m.getMessageText());
+        Message[] messageArray = loreService.getLoresFromServer(event.getServer().get());
+
+        if (messageArray.length > 0) {
+            Message m = messageArray[random.nextInt(messageArray.length)];
+
+            Embed e = m.getEmbeds().get(0);
+
+            logger.info("Sending random lore: {}", "m.getMessageText()");
+            if(e.getImage().isPresent()) {
+                EmbedImage image = e.getImage().get();
+                try {
+                    event.getChannel().sendMessage(
+                            e.getDescription().isPresent() ? e.getDescription().get() : null,
+                            image.downloadAsInputStream(event.getApi()),
+                            image.getUrl().getPath().substring(image.getUrl().getPath().lastIndexOf("/")+1)
+                    );
+                } catch (IOException exc) {
+                    logger.error(exc);
+                }
+            } else {
+                event.getChannel().sendMessage(e.getDescription().get());
+            }
+        }
     }
 
     /**

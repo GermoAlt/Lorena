@@ -3,12 +3,12 @@ package com.buffer.lorena.bot.service;
 import com.buffer.lorena.bot.entity.Suggestion;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.javacord.api.entity.message.MessageSet;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.event.message.reaction.ReactionAddEvent;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.core.env.Environment;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -22,19 +22,21 @@ public class LorenaService {
 
     private final MessageService messageService;
     private final ReactionService reactionService;
+    private final LoreService loreService;
     private final Environment environment;
 
     /**
      * Instantiates a new Lorena service.
-     *
-     * @param environment     the environment
+     *  @param environment     the environment
      * @param messageService  the message service
      * @param reactionService the reaction service
+     * @param loreService
      */
-    public LorenaService(Environment environment, MessageService messageService, ReactionService reactionService) {
+    public LorenaService(Environment environment, MessageService messageService, ReactionService reactionService, LoreService loreService) {
         this.environment = environment;
         this.messageService = messageService;
         this.reactionService = reactionService;
+        this.loreService = loreService;
     }
 
     /**
@@ -169,5 +171,15 @@ public class LorenaService {
      */
     public void handleSuggestion(Suggestion suggestion) {
         this.messageService.handleSuggestion(suggestion);
+    }
+
+    public void handleRemoveLoreReaction(ReactionAddEvent event) {
+        User user = event.getApi().getUserById(event.getUserId()).join();
+        if(event.getServer().get().isAdmin(user)){
+            this.loreService.removeLore(event);
+            event.addReactionsToMessage("✅");
+        } else {
+            event.addReactionsToMessage("❌");
+        }
     }
 }

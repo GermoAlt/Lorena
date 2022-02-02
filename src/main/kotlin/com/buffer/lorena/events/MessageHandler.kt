@@ -27,7 +27,12 @@ class MessageHandler(
      * @param event the event
      */
     override fun onMessageCreate(event: MessageCreateEvent) {
-        logger.info("message received in server {}: {}", event.server.map { obj: Server -> obj.name }.get(), event.messageContent)
+        logger.info("New message in {}(#{}) by {}({}): {}",
+            event.server.map { obj: Server -> obj.name }.get(),
+            event.channel.asServerTextChannel().get().name,
+            event.messageAuthor.discriminatedName,
+            event.messageAuthor.displayName,
+            event.messageContent + if (event.message.attachments.isNotEmpty()) " " + event.message.attachments.map { obj -> obj.url.toString() } else "")
 
         val parsedMessage = event.messageContent.split(" ")
 

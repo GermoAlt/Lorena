@@ -17,6 +17,8 @@ public class Lore {
   private java.sql.Timestamp createdAt;
   @Column(name = "updatedAt")
   private java.sql.Timestamp updatedAt;
+  @Column(name = "active")
+  private boolean active;
 
     /**
      * Instantiates a new Lore.
@@ -32,6 +34,7 @@ public class Lore {
     public Lore(LoreId loreId) {
     this.loreId = loreId;
     this.createdAt = Timestamp.from(Instant.now());
+    this.active = true;
   }
 
     /**
