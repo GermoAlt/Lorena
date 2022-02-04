@@ -22,7 +22,6 @@ public class LorenaService {
 
     private final MessageService messageService;
     private final ReactionService reactionService;
-    private final LoreService loreService;
     private final Environment environment;
 
     /**
@@ -30,13 +29,11 @@ public class LorenaService {
      *  @param environment     the environment
      * @param messageService  the message service
      * @param reactionService the reaction service
-     * @param loreService
      */
-    public LorenaService(Environment environment, MessageService messageService, ReactionService reactionService, LoreService loreService) {
+    public LorenaService(Environment environment, MessageService messageService, ReactionService reactionService) {
         this.environment = environment;
         this.messageService = messageService;
         this.reactionService = reactionService;
-        this.loreService = loreService;
     }
 
     /**
@@ -127,15 +124,6 @@ public class LorenaService {
     }
 
     /**
-     * Handle reprocessing.
-     *
-     * @param event the event
-     */
-    public void handleReprocessingReaction(ReactionAddEvent event) {
-        this.reactionService.handleLoreReaction(event);
-    }
-
-    /**
      * Send random lore.
      *
      * @param event the event
@@ -171,15 +159,5 @@ public class LorenaService {
      */
     public void handleSuggestion(Suggestion suggestion) {
         this.messageService.handleSuggestion(suggestion);
-    }
-
-    public void handleRemoveLoreReaction(ReactionAddEvent event) {
-        User user = event.getApi().getUserById(event.getUserId()).join();
-        if(event.getServer().get().isAdmin(user)){
-            this.loreService.removeLore(event);
-            event.addReactionsToMessage("✅");
-        } else {
-            event.addReactionsToMessage("❌");
-        }
     }
 }

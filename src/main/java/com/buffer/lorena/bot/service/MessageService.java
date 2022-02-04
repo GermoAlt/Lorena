@@ -3,8 +3,6 @@ package com.buffer.lorena.bot.service;
 import com.buffer.lorena.bot.converter.LorenaConverter;
 import com.buffer.lorena.bot.entity.ServerDAO;
 import com.buffer.lorena.bot.entity.Suggestion;
-import com.buffer.lorena.bot.repository.LoreRepository;
-import com.buffer.lorena.bot.repository.MessageRepository;
 import com.buffer.lorena.bot.repository.ServerRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Random;
 
 /**
@@ -30,25 +29,18 @@ public class MessageService {
     private final LorenaConverter lorenaConverter;
     private final LoreService loreService;
     private final ServerRepository serverRepository;
-    private final LoreRepository loreRepository;
-    private final MessageRepository messageRepository;
     private final Random random = new Random();
 
     /**
      * Instantiates a new Message service.
      *  @param lorenaConverter   the lorena converter
-     * @param loreService
+     * @param loreService the lore service
      * @param serverRepository  the server repository
-     * @param loreRepository    the lore repository
-     * @param messageRepository the message repository
      */
-    public MessageService(LorenaConverter lorenaConverter, LoreService loreService, ServerRepository serverRepository,
-                          LoreRepository loreRepository, MessageRepository messageRepository) {
+    public MessageService(LorenaConverter lorenaConverter, LoreService loreService, ServerRepository serverRepository) {
         this.lorenaConverter = lorenaConverter;
         this.loreService = loreService;
         this.serverRepository = serverRepository;
-        this.loreRepository = loreRepository;
-        this.messageRepository = messageRepository;
     }
 
     /**
@@ -93,14 +85,15 @@ public class MessageService {
      * @param event the event
      */
     public void sendRandomLore(MessageCreateEvent event) {
-        Message[] messageArray = loreService.getLoresFromServer(event.getServer().get());
+        Collection<Message> messages = loreService.getLoresFromServer(event.getServer().get()).values();
 
-        if (messageArray.length > 0) {
-            Message m = messageArray[random.nextInt(messageArray.length)];
+
+        if (messages.size() > 0) {
+            Message m = (Message) messages.toArray()[random.nextInt(messages.size())];
 
             Embed e = m.getEmbeds().get(0);
 
-            logger.info("Sending random lore: {}", "m.getMessageText()");
+            logger.info("Sending random lore");
             if(e.getImage().isPresent()) {
                 EmbedImage image = e.getImage().get();
                 try {

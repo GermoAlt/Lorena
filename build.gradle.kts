@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "com.buffer"
-version = "2.0.0-SNAPSHOT"
+version = "2.1.0-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 
@@ -38,6 +38,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 
 	implementation("com.h2database:h2")
+	implementation("org.postgresql:postgresql")
 
 	//javacord
 	implementation("org.javacord:javacord:3.3.2")

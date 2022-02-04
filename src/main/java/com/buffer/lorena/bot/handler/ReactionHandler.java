@@ -53,12 +53,6 @@ public class ReactionHandler implements ReactionAddListener, ReactionRemoveListe
             case "🔏":
                 this.lorenaService.handleForceLoreReaction(event);
                 break;
-            case "🔄":
-                this.lorenaService.handleReprocessingReaction(event);
-                break;
-            case "📛":
-                this.lorenaService.handleRemoveLoreReaction(event);
-                break;
             default:
                 break;
             }
