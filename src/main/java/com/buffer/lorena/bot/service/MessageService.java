@@ -108,6 +108,8 @@ public class MessageService {
             } else {
                 event.getChannel().sendMessage(e.getDescription().get());
             }
+        } else {
+            event.getChannel().sendMessage("no lores in memory");
         }
     }
 
