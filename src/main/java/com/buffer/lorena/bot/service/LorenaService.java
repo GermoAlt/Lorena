@@ -129,7 +129,7 @@ public class LorenaService {
      * @param event the event
      */
     public void sendRandomLore(MessageCreateEvent event) {
-        if(this.isProdEnvironment()) this.messageService.sendRandomLore(event);
+        this.messageService.sendRandomLore(event);
     }
 
     /**

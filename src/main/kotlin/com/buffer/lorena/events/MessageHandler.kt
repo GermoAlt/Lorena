@@ -49,7 +49,15 @@ class MessageHandler(
                     else -> event.channel.sendMessage("fuck off")
                 }
 
-            event.messageContent.lowercase().contains(LORENA_TEXT) -> lorenaService.sendRandomLore(event)
+            event.messageContent.lowercase().contains(LORENA_TEXT) -> {
+                logger.info("detected a new summon")
+                if(event.messageContent.lowercase().contains("nuggies")
+                    && event.messageAuthor.name.contains("tina")) {
+                    event.channel.sendMessage("nuggies machine broke")
+                } else {
+                    lorenaService.sendRandomLore(event)
+                }
+            }
         }
 
         parsedMessage.filter { it.isReddit() }.forEach {
