@@ -68,7 +68,7 @@ public class LoreService {
                     Server server = this.discordService.getDiscordApi().getServerById(serverDAO.getIdServer()).get();
                     Map<Long, Message> messagePerServerMap = new HashMap<>();
                     set.stream().forEachOrdered(message -> {
-                        if (!message.getAuthor().getDisplayName().toLowerCase(Locale.ROOT).contains("lorena")
+                        if (!message.getAuthor().getName().toLowerCase(Locale.ROOT).contains("lorena")
                                 || message.getEmbeds().isEmpty())
                             return;
                         Embed e = message.getEmbeds().get(0);

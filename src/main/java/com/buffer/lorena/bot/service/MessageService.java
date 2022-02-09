@@ -109,7 +109,7 @@ public class MessageService {
                 event.getChannel().sendMessage(e.getDescription().get());
             }
         } else {
-            event.getChannel().sendMessage("no lores in memory");
+            logger.info("tried to send lore but lore map was empty");
         }
     }
 
