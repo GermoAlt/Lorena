@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory
 import java.util.*
 import javax.measure.converter.UnitConverter
 import javax.measure.quantity.Area
+import javax.measure.quantity.Velocity
 import javax.measure.unit.NonSI
 import javax.measure.unit.ProductUnit
 import javax.measure.unit.SI
@@ -52,6 +53,7 @@ enum class Units(val unit: JUnit<*>, val printedName: String, vararg val ciNames
 
     KMH(NonSI.KILOMETRES_PER_HOUR, "km/h", "km/h", "kmh", "kph"),
     MPH(NonSI.MILES_PER_HOUR, "mph", "mph"),
+    METERS_PER_SECOND(SI.METER.divide(SI.SECOND).asType(Velocity::class.java), "m/s", "metres per second"),
 
     LITRE(NonSI.LITRE, "l", "l", "litre", "litres", "liter", "liters"),
     MILLILITRE(MILLI(NonSI.LITRE), "ml", "ml", "millilitre", "milliliter", "millilitres", "milliliters"),
