@@ -56,7 +56,7 @@ public class LoreService {
 
     @PostConstruct
     private void loadLoreMap(){
-        this.serverRepository.findAll().forEach(serverDAO -> {
+        for (ServerDAO serverDAO : this.serverRepository.findAll()) {
             logger.info("fetching from server {}", serverDAO.getName());
             if (serverDAO.getLoreChannel() != null) {
                 try {
@@ -64,10 +64,9 @@ public class LoreService {
                             .getServerById(serverDAO.getIdServer()).get()
                             .getChannelById(serverDAO.getLoreChannel()).get()
                             .asServerTextChannel().get();
-                    MessageSet set = loreChannel.getMessages(100000).join();
-                    Server server = this.discordService.getDiscordApi().getServerById(serverDAO.getIdServer()).get();
+                    Set<Message> set = loreChannel.getMessagesAsStream().collect(Collectors.toSet());
                     Map<Long, Message> messagePerServerMap = new HashMap<>();
-                    set.stream().forEachOrdered(message -> {
+                    set.forEach(message -> {
                         if (!message.getAuthor().getName().toLowerCase(Locale.ROOT).contains("lorena")
                                 || message.getEmbeds().isEmpty())
                             return;
@@ -77,7 +76,7 @@ public class LoreService {
                         Long originalMessageID = Long.parseLong(
                                 urlMessage.substring(
                                         urlMessage.lastIndexOf("/") + 1,
-                                        urlMessage.contains("\"") ? urlMessage.indexOf("\"") -1 : urlMessage.length() - 3));
+                                        urlMessage.contains("\"") ? urlMessage.indexOf("\"") - 1 : urlMessage.length() - 3));
                         messagePerServerMap.put(originalMessageID, message);
                     });
                     loreMap.put(
@@ -90,7 +89,7 @@ public class LoreService {
             } else {
                 logger.warn("lore channel not set for server {}", serverDAO.getName());
             }
-        });
+        }
     }
 
     /**

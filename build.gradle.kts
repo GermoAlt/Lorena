@@ -41,7 +41,7 @@ dependencies {
 	implementation("org.postgresql:postgresql")
 
 	//javacord
-	implementation("org.javacord:javacord:3.3.2")
+	implementation("org.javacord:javacord:3.4.0")
 
 	// To make jackson work with kotlin
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.1")

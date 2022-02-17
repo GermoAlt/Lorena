@@ -87,8 +87,7 @@ public class MessageService {
     public void sendRandomLore(MessageCreateEvent event) {
         Collection<Message> messages = loreService.getLoresFromServer(event.getServer().get()).values();
 
-
-        if (messages.size() > 0) {
+        if (!messages.isEmpty()) {
             Message m = (Message) messages.toArray()[random.nextInt(messages.size())];
 
             Embed e = m.getEmbeds().get(0);
