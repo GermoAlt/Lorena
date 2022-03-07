@@ -9,7 +9,6 @@ import org.javacord.api.entity.channel.Channel;
 import org.javacord.api.entity.channel.ServerTextChannel;
 import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.message.MessageAuthor;
-import org.javacord.api.entity.message.MessageSet;
 import org.javacord.api.entity.message.Reaction;
 import org.javacord.api.entity.message.embed.Embed;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
@@ -67,7 +66,7 @@ public class LoreService {
                     Set<Message> set = loreChannel.getMessagesAsStream().collect(Collectors.toSet());
                     Map<Long, Message> messagePerServerMap = new HashMap<>();
                     set.forEach(message -> {
-                        if (!message.getAuthor().getName().toLowerCase(Locale.ROOT).contains("lorena")
+                        if (message.getAuthor().getId() != message.getApi().getClientId()
                                 || message.getEmbeds().isEmpty())
                             return;
                         Embed e = message.getEmbeds().get(0);
