@@ -21,7 +21,7 @@ public class LorenaConverter {
     /**
      * Instantiates a new Lorena converter.
      *
-     * @param serverRepository  the server repository
+     * @param serverRepository the server repository
      */
     public LorenaConverter(ServerRepository serverRepository) {
         this.serverRepository = serverRepository;

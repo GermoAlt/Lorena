@@ -1,5 +1,6 @@
 package com.buffer.lorena.events
 
+import com.buffer.lorena.bot.converter.LorenaConverter
 import org.javacord.api.listener.message.MessageCreateListener
 import com.buffer.lorena.bot.service.LorenaService
 import com.buffer.lorena.service.RedditService
@@ -9,6 +10,7 @@ import org.javacord.api.entity.server.Server
 import org.javacord.api.event.message.MessageCreateEvent
 import org.springframework.stereotype.Component
 import java.util.Locale
+import java.util.Random
 
 /**
  * The type Message handler.
@@ -18,6 +20,7 @@ class MessageHandler(
         private val lorenaService: LorenaService,
         private val redditService: RedditService,
         private val unitConversionService: UnitConversionService,
+        private val lorenaConverter: LorenaConverter
 ) : MessageCreateListener {
     private val logger = LogManager.getLogger(MessageHandler::class.java)
 
@@ -35,6 +38,8 @@ class MessageHandler(
             event.messageContent + if (event.message.attachments.isNotEmpty()) " " + event.message.attachments.map { obj -> obj.url.toString() } else "")
 
         val parsedMessage = event.messageContent.split(" ")
+
+        lorenaConverter.convertServer(event.server.get())
 
         when {
             (parsedMessage[0].equals("!lore", ignoreCase = true)
@@ -55,7 +60,9 @@ class MessageHandler(
                     && event.messageAuthor.name.contains("tina")) {
                     event.channel.sendMessage("nuggies machine broke")
                 } else {
-                    lorenaService.sendRandomLore(event)
+                    repeat(Random().nextInt(2)+1) {
+                        lorenaService.sendRandomLore(event)
+                    }
                 }
             }
         }

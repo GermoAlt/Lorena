@@ -41,10 +41,11 @@ public class LoreService {
 
     /**
      * Instantiates a new Lore service.
-     * @param lorenaConverter the lorena converter
-     * @param serverRepository
-     * @param discordService
-     * @param environment     the environment
+     *
+     * @param lorenaConverter  the lorena converter
+     * @param serverRepository the server repository
+     * @param discordService   the discord service
+     * @param environment      the environment
      */
     public LoreService(LorenaConverter lorenaConverter, ServerRepository serverRepository, DiscordService discordService, Environment environment) {
         this.lorenaConverter = lorenaConverter;
@@ -56,38 +57,7 @@ public class LoreService {
     @PostConstruct
     private void loadLoreMap(){
         for (ServerDAO serverDAO : this.serverRepository.findAll()) {
-            logger.info("fetching from server {}", serverDAO.getName());
-            if (serverDAO.getLoreChannel() != null) {
-                try {
-                    ServerTextChannel loreChannel = this.discordService.getDiscordApi()
-                            .getServerById(serverDAO.getIdServer()).get()
-                            .getChannelById(serverDAO.getLoreChannel()).get()
-                            .asServerTextChannel().get();
-                    Set<Message> set = loreChannel.getMessagesAsStream().collect(Collectors.toSet());
-                    Map<Long, Message> messagePerServerMap = new HashMap<>();
-                    set.forEach(message -> {
-                        if (message.getAuthor().getId() != message.getApi().getClientId()
-                                || message.getEmbeds().isEmpty())
-                            return;
-                        Embed e = message.getEmbeds().get(0);
-                        String urlMessage = e.getFields().get(0).getValue();
-
-                        Long originalMessageID = Long.parseLong(
-                                urlMessage.substring(
-                                        urlMessage.lastIndexOf("/") + 1,
-                                        urlMessage.contains("\"") ? urlMessage.indexOf("\"") - 1 : urlMessage.length() - 3));
-                        messagePerServerMap.put(originalMessageID, message);
-                    });
-                    loreMap.put(
-                            this.discordService.getDiscordApi().getServerById(serverDAO.getIdServer()).get(),
-                            messagePerServerMap
-                    );
-                } catch (NoSuchElementException exception) {
-                    logger.error("error fetching from server {}", serverDAO.getName());
-                }
-            } else {
-                logger.warn("lore channel not set for server {}", serverDAO.getName());
-            }
+            loadLoresFromServer(serverDAO);
         }
     }
 
@@ -176,7 +146,57 @@ public class LoreService {
                 idMessage.toString();
     }
 
+    /**
+     * Get lores from server map.
+     *
+     * @param server the server
+     * @return the map
+     */
     public Map<Long, Message> getLoresFromServer(Server server){
+        Map<Long, Message> lores = loreMap.get(server);
+        if (lores == null){
+            loadLoresFromServer(this.serverRepository.getOne(server.getId()));
+        }
         return loreMap.get(server);
+    }
+
+    /**
+     * Load lores from server.
+     *
+     * @param server the server
+     */
+    public void loadLoresFromServer(ServerDAO server){
+        logger.info("fetching from server {}", server.getName());
+        if (server.getLoreChannel() != null) {
+            try {
+                ServerTextChannel loreChannel = this.discordService.getDiscordApi()
+                        .getServerById(server.getIdServer()).get()
+                        .getChannelById(server.getLoreChannel()).get()
+                        .asServerTextChannel().get();
+                Set<Message> set = loreChannel.getMessagesAsStream().collect(Collectors.toSet());
+                Map<Long, Message> messagePerServerMap = new HashMap<>();
+                set.forEach(message -> {
+                    if (message.getAuthor().getId() != message.getApi().getClientId()
+                            || message.getEmbeds().isEmpty())
+                        return;
+                    Embed e = message.getEmbeds().get(0);
+                    String urlMessage = e.getFields().get(0).getValue();
+
+                    Long originalMessageID = Long.parseLong(
+                            urlMessage.substring(
+                                    urlMessage.lastIndexOf("/") + 1,
+                                    urlMessage.contains("\"") ? urlMessage.indexOf("\"") - 1 : urlMessage.length() - 3));
+                    messagePerServerMap.put(originalMessageID, message);
+                });
+                loreMap.put(
+                        this.discordService.getDiscordApi().getServerById(server.getIdServer()).get(),
+                        messagePerServerMap
+                );
+            } catch (NoSuchElementException exception) {
+                logger.error("error fetching from server {}", server.getName());
+            }
+        } else {
+            logger.warn("lore channel not set for server {}", server.getName());
+        }
     }
 }

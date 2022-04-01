@@ -26,7 +26,8 @@ public class LorenaService {
 
     /**
      * Instantiates a new Lorena service.
-     *  @param environment     the environment
+     *
+     * @param environment     the environment
      * @param messageService  the message service
      * @param reactionService the reaction service
      */

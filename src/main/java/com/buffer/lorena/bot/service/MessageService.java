@@ -33,9 +33,10 @@ public class MessageService {
 
     /**
      * Instantiates a new Message service.
-     *  @param lorenaConverter   the lorena converter
-     * @param loreService the lore service
-     * @param serverRepository  the server repository
+     *
+     * @param lorenaConverter  the lorena converter
+     * @param loreService      the lore service
+     * @param serverRepository the server repository
      */
     public MessageService(LorenaConverter lorenaConverter, LoreService loreService, ServerRepository serverRepository) {
         this.lorenaConverter = lorenaConverter;
