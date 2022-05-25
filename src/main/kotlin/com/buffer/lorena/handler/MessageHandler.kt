@@ -1,4 +1,4 @@
-package com.buffer.lorena.events
+package com.buffer.lorena.handler
 
 import com.buffer.lorena.bot.converter.LorenaConverter
 import org.javacord.api.listener.message.MessageCreateListener
