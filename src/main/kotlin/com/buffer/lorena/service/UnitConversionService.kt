@@ -59,7 +59,7 @@ class UnitConversionService(
         val forConversion = tokens.mapIndexedNotNull { index, token ->
             when {
                 index == 0 -> null
-                Units.AUTO_CONVERSION_NAMES.contains(token) && tokens[index-1].isNumeric() ->
+                token != "in" && Units.AUTO_CONVERSION_NAMES.contains(token) && tokens[index-1].isNumeric() ->
                     tokens[index-1].toDouble() to Units.matchAuto(token)
                 // Liquid ounce fix
                 index > 1 && Units.AUTO_CONVERSION_NAMES.contains("${tokens[index-1]} $token") &&

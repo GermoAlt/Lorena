@@ -33,7 +33,7 @@ enum class Units(val unit: JUnit<*>, val printedName: String, vararg val ciNames
     // Double
     SQUARE_FOOT(ProductUnit<Area>(NonSI.FOOT.times(NonSI.FOOT)), "ft²", "ft2", "ft²", "sq ft", "sq. ft", "square feet"),
     YARD(NonSI.YARD, "yd", "yard", "yards", "yd"),
-    INCH(NonSI.INCH, "in", "inch", "inches", "in", """""""),
+    INCH(NonSI.INCH, "in", "inch", "inches", "in"),
     MILE(NonSI.MILE, "mi", "mile", "miles", "mi"),
 
     MINUTE(NonSI.MINUTE, "min", "min", "minute", "minutes"),
