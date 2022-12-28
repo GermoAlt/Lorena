@@ -1,10 +1,10 @@
 plugins {
     java
-	kotlin("jvm") version "1.5.21"
+	kotlin("jvm") version "1.7.21"
 	id("org.springframework.boot") version "2.4.4"
 	id("io.spring.dependency-management") version "1.0.11.RELEASE"
-	id("org.jetbrains.kotlin.plugin.spring") version "1.5.21"
-	id("org.jetbrains.kotlin.plugin.jpa") version "1.5.21"
+	id("org.jetbrains.kotlin.plugin.spring") version "1.7.21"
+	id("org.jetbrains.kotlin.plugin.jpa") version "1.7.21"
 }
 
 group = "com.buffer"
@@ -63,7 +63,7 @@ dependencies {
 
 
 	//log4j
-	runtimeOnly("org.apache.logging.log4j:log4j-core:2.17.0")
+	runtimeOnly("org.apache.logging.log4j:log4j-core")
 
 
 	// As if you're doing tests...
