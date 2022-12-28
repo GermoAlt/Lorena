@@ -54,7 +54,7 @@ class MessageHandler(
                     else -> event.channel.sendMessage("fuck off")
                 }
 
-            event.messageContent.lowercase().contains(LORENA_TEXT) -> {
+            (event.messageContent.lowercase().contains(LORENA_TEXT) || event.messageContent.lowercase().contains(LORENZO_TEXT)) -> {
                 logger.info("detected a new summon")
                 if(event.messageContent.lowercase().contains("nuggies")
                     && event.messageAuthor.name.contains("tina")) {
@@ -78,6 +78,7 @@ class MessageHandler(
 
     companion object {
         private const val LORENA_TEXT = "lorena"
+        private const val LORENZO_TEXT = "lorenzo"
         private val REDDIT_REGEX = """\b([ru])/([a-zA-Z0-9-_]{3,21})\b""".toRegex()
     }
 }
