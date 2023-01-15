@@ -30,7 +30,7 @@ public class DiscordService {
     public void login(){
         logger.info(token);
         this.discordApi = new DiscordApiBuilder().setToken(token)
-                .setAllNonPrivilegedIntents()
+                .setAllIntents()
                 .login().join();
     }
 

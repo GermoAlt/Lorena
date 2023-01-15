@@ -1,7 +1,7 @@
 plugins {
     java
 	kotlin("jvm") version "1.7.21"
-	id("org.springframework.boot") version "2.4.4"
+	id("org.springframework.boot") version "2.7.5"
 	id("io.spring.dependency-management") version "1.0.11.RELEASE"
 	id("org.jetbrains.kotlin.plugin.spring") version "1.7.21"
 	id("org.jetbrains.kotlin.plugin.jpa") version "1.7.21"
@@ -41,10 +41,10 @@ dependencies {
 	implementation("org.postgresql:postgresql")
 
 	//javacord
-	implementation("org.javacord:javacord:3.4.0")
+	implementation("org.javacord:javacord:3.7.0")
 
 	// To make jackson work with kotlin
-	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.1")
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.14.0")
 
 	// Unit conversion
 	implementation("org.jscience:jscience:4.3.1")

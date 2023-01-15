@@ -99,7 +99,7 @@ public class MessageService {
                 try {
                     event.getChannel().sendMessage(
                             e.getDescription().isPresent() ? e.getDescription().get() : null,
-                            image.downloadAsInputStream(event.getApi()),
+                            image.asInputStream(event.getApi()),
                             image.getUrl().getPath().substring(image.getUrl().getPath().lastIndexOf("/")+1)
                     );
                 } catch (IOException exc) {
