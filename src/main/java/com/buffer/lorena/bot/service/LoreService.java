@@ -155,7 +155,7 @@ public class LoreService {
     public Map<Long, Message> getLoresFromServer(Server server){
         Map<Long, Message> lores = loreMap.get(server);
         if (lores == null){
-            loadLoresFromServer(this.serverRepository.getOne(server.getId()));
+            loadLoresFromServer(this.serverRepository.findById(server.getId()).get());
         }
         return loreMap.get(server);
     }

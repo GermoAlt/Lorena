@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     java
 	kotlin("jvm") version "1.7.21"
@@ -8,8 +10,8 @@ plugins {
 }
 
 group = "com.buffer"
-version = "3.0.1-SNAPSHOT"
-java.sourceCompatibility = JavaVersion.VERSION_11
+version = "4.0.0-SNAPSHOT"
+java.sourceCompatibility = JavaVersion.VERSION_17
 
 
 repositories {
@@ -33,12 +35,8 @@ springBoot {
 }
 
 dependencies {
-	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-	implementation("org.springframework.boot:spring-boot-starter-jdbc")
+	implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
 	implementation("org.springframework.boot:spring-boot-starter-web")
-
-	implementation("com.h2database:h2")
-	implementation("org.postgresql:postgresql")
 
 	//javacord
 	implementation("org.javacord:javacord:3.7.0")
@@ -68,8 +66,17 @@ dependencies {
 
 	// As if you're doing tests...
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+    implementation(kotlin("stdlib-jdk8"))
 }
 
 tasks.test {
 	useJUnitPlatform()
+}
+val compileKotlin: KotlinCompile by tasks
+compileKotlin.kotlinOptions {
+    jvmTarget = "17"
+}
+val compileTestKotlin: KotlinCompile by tasks
+compileTestKotlin.kotlinOptions {
+    jvmTarget = "17"
 }

@@ -42,7 +42,7 @@ public class LorenaConverter {
             if (serverDAO.get().getCreatedAt() == null) serverDAO.get().setCreatedAt(Timestamp.from(Instant.now()));
             serverDAO.get().setUpdatedAt(Timestamp.from(Instant.now()));
         }
-        return serverRepository.saveAndFlush(serverDAO.get());
+        return serverRepository.save(serverDAO.get());
 
     }
 }

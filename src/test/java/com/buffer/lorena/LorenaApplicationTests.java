@@ -9,11 +9,4 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class LorenaApplicationTests {
 
-    /**
-     * Context loads.
-     */
-    @Test
-	void contextLoads() {
-	}
-
 }

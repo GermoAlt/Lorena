@@ -3,10 +3,9 @@ package com.buffer.lorena.service
 import com.buffer.lorena.utils.Units
 import com.buffer.lorena.utils.Units.Companion.autoConverter
 import com.buffer.lorena.utils.Units.Companion.corresponding
-import com.buffer.lorena.utils.orNull
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonInclude
-import com.fasterxml.jackson.databind.PropertyNamingStrategy
+import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.annotation.JsonNaming
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
@@ -17,12 +16,10 @@ import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.stereotype.Service
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.getForObject
-import org.springframework.web.util.UriBuilder
 import org.springframework.web.util.UriComponentsBuilder
 import java.lang.Exception
 import java.math.BigDecimal
 import java.math.RoundingMode
-import java.sql.Timestamp
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.*
@@ -112,7 +109,7 @@ class UnitConversionService(
             .queryParam("apikey", currencyToken)
             .queryParam("base_currency", from).build().toUri()
         try {
-            val result = restTemplate.getForObject<CurrencyRespone>(uri)
+            val result = restTemplate.getForObject<CurrencyResponse>(uri)
             if (result.query.baseCurrency != from) return "Your from currency isn't supported"
 
             val conversionMultiplier = result.data[to] ?: return "Your to currency isn't supported"
@@ -146,15 +143,15 @@ class UnitConversionService(
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy::class)
-    data class CurrencyRespone(
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)
+    data class CurrencyResponse(
         val query: CurrencyQuery,
         val data: Map<String, BigDecimal>
     )
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy::class)
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)
     data class CurrencyQuery(
         val baseCurrency: String,
         val timestamp: Long,

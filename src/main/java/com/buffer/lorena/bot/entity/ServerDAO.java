@@ -1,37 +1,30 @@
 package com.buffer.lorena.bot.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.sql.Timestamp;
-import java.time.Instant;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.Date;
 
 /**
  * The type Server dao.
  */
-@Entity
-@Table(name = "Server")
+@Document("server")
 public class ServerDAO {
 
   @Id
   private long idServer;
   private String name;
   private Integer userVoteThreshold;
-  @Column(name = "ID_CHANNEL_LOREBOARD")
   private Long loreChannel;
-  @Column(name = "ID_CHANNEL_SUGGESTION")
   private Long suggestionChannel;
-  @Column(name = "createdAt")
-  private java.sql.Timestamp createdAt;
-  @Column(name = "updatedAt")
-  private java.sql.Timestamp updatedAt;
+  private Date createdAt;
+  private Date updatedAt;
 
   /**
    * Instantiates a new Server dao.
    */
   public ServerDAO() {
-    this.createdAt = Timestamp.from(Instant.now());
+    this.createdAt = new Date();
   }
 
   /**
@@ -43,7 +36,7 @@ public class ServerDAO {
   public ServerDAO(long idServer, String name) {
     this.idServer = idServer;
     this.name = name;
-    this.createdAt = Timestamp.from(Instant.now());
+    this.createdAt = new Date();
   }
 
   /**
@@ -108,7 +101,7 @@ public class ServerDAO {
    *
    * @return the created at
    */
-  public java.sql.Timestamp getCreatedAt() {
+  public Date getCreatedAt() {
     return createdAt;
   }
 
@@ -117,7 +110,7 @@ public class ServerDAO {
    *
    * @param createdAt the created at
    */
-  public void setCreatedAt(java.sql.Timestamp createdAt) {
+  public void setCreatedAt(Date createdAt) {
     this.createdAt = createdAt;
   }
 
@@ -127,7 +120,7 @@ public class ServerDAO {
    *
    * @return the updated at
    */
-  public java.sql.Timestamp getUpdatedAt() {
+  public Date getUpdatedAt() {
     return updatedAt;
   }
 
@@ -136,7 +129,7 @@ public class ServerDAO {
    *
    * @param updatedAt the updated at
    */
-  public void setUpdatedAt(java.sql.Timestamp updatedAt) {
+  public void setUpdatedAt(Date updatedAt) {
     this.updatedAt = updatedAt;
   }
 
