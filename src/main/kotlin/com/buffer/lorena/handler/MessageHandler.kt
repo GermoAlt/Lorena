@@ -10,7 +10,6 @@ import org.javacord.api.entity.server.Server
 import org.javacord.api.event.message.MessageCreateEvent
 import org.springframework.stereotype.Component
 import java.util.Locale
-import java.util.Random
 
 /**
  * The type Message handler.
@@ -33,7 +32,7 @@ class MessageHandler(
         logger.info("New message in {}(#{}) by {}({}): {}",
             event.server.map { obj: Server -> obj.name }.get(),
             event.channel.asServerTextChannel().get().name,
-            event.messageAuthor.discriminatedName,
+            event.messageAuthor.name,
             event.messageAuthor.displayName,
             event.messageContent + if (event.message.attachments.isNotEmpty()) " " + event.message.attachments.map { obj -> obj.url.toString() } else "")
 
@@ -59,11 +58,12 @@ class MessageHandler(
                 if(event.messageContent.lowercase().contains("nuggies")
                     && event.messageAuthor.name.contains("tina")) {
                     event.channel.sendMessage("nuggies machine broke")
-                } else {
-                    repeat(Random().nextInt(2)+1) {
-                        lorenaService.sendRandomLore(event)
-                    }
                 }
+//                else {
+//                    repeat(Random().nextInt(2)+1) {
+//                        lorenaService.sendRandomLore(event)
+//                    }
+//                }
             }
         }
 

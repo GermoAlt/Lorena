@@ -72,7 +72,7 @@ public class LoreService {
             if (!message.getAuthor().isBotUser()) {
                 Reaction reaction = event.requestReaction().join().get();
                 List<Reaction> reactions = reaction.getMessage().getReactions().stream()
-                        .filter(r -> r.getEmoji().equalsEmoji("📜")).collect(Collectors.toList());
+                        .filter(r -> r.getEmoji().equalsEmoji("📜")).toList();
                 ServerDAO server = this.lorenaConverter.convertServer(event.getServer().get());
                 if (!reactions.isEmpty() && reactions.get(0).getCount() >= server.getUserVoteThreshold()) {
                     this.handleLore(event);
@@ -117,7 +117,7 @@ public class LoreService {
             MessageAuthor author = message.getAuthor();
             EmbedBuilder embed = new EmbedBuilder()
                     .setDescription(message.getContent())
-                    .setAuthor(author.getDiscriminatedName(), null, author.getAvatar())
+                    .setAuthor(author.getName(), null, author.getAvatar())
                     .setTimestampToNow()
                     .addInlineField("Original", "**[Jump to Message]("+buildMessageUrl(server.getIdServer(), channel.getId(), message.getId())+")**")
                     .addInlineField("Channel", "<#"+ channel.getIdAsString()+">")

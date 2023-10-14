@@ -123,7 +123,7 @@ public class MessageService {
 
         EmbedBuilder embed = new EmbedBuilder()
                 .setDescription(suggestion.getSuggestion())
-                .setAuthor(suggestion.getAuthor().getDiscriminatedName(), null, suggestion.getAuthor().getAvatar())
+                .setAuthor(suggestion.getAuthor().getName(), null, suggestion.getAuthor().getAvatar())
                 .setTimestampToNow()
                 .setColor(Color.PINK);
         suggestion.getApi().getChannelById(serverDAO.getSuggestionChannel()).flatMap(Channel::asTextChannel).get().sendMessage(embed);
