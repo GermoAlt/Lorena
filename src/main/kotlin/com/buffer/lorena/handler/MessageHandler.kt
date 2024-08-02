@@ -9,7 +9,7 @@ import org.apache.logging.log4j.LogManager
 import org.javacord.api.entity.server.Server
 import org.javacord.api.event.message.MessageCreateEvent
 import org.springframework.stereotype.Component
-import java.util.Locale
+import java.util.*
 
 /**
  * The type Message handler.
@@ -59,11 +59,11 @@ class MessageHandler(
                     && event.messageAuthor.name.contains("tina")) {
                     event.channel.sendMessage("nuggies machine broke")
                 }
-//                else {
-//                    repeat(Random().nextInt(2)+1) {
-//                        lorenaService.sendRandomLore(event)
-//                    }
-//                }
+                else {
+                    repeat(Random().nextInt(2)+1) {
+                        lorenaService.sendRandomLore(event)
+                    }
+                }
             }
         }
 

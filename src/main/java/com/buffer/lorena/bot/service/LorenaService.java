@@ -130,6 +130,7 @@ public class LorenaService {
      * @param event the event
      */
     public void sendRandomLore(MessageCreateEvent event) {
+        if(event.getServer().get().getId() == 774734597816713216L && event.getChannel().getId() != 777278860747866152L) return;
         this.messageService.sendRandomLore(event);
     }
 
