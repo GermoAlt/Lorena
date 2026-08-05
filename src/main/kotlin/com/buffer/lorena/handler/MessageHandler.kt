@@ -1,14 +1,16 @@
 package com.buffer.lorena.handler
 
 import com.buffer.lorena.bot.converter.LorenaConverter
-import org.javacord.api.listener.message.MessageCreateListener
 import com.buffer.lorena.bot.service.LorenaService
 import com.buffer.lorena.service.RedditService
 import com.buffer.lorena.service.UnitConversionService
 import org.apache.logging.log4j.LogManager
 import org.javacord.api.entity.server.Server
 import org.javacord.api.event.message.MessageCreateEvent
+import org.javacord.api.listener.message.MessageCreateListener
 import org.springframework.stereotype.Component
+import java.time.DayOfWeek
+import java.time.LocalDateTime
 import java.util.*
 
 /**
@@ -64,6 +66,10 @@ class MessageHandler(
                         lorenaService.sendRandomLore(event)
                     }
                 }
+            }
+
+            (LocalDateTime.now().dayOfWeek == DayOfWeek.WEDNESDAY) -> {
+                if (Math.random() < 0.05) lorenaService.sendRandomLore(event)
             }
         }
 
