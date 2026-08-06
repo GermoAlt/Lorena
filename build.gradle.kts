@@ -1,14 +1,11 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
 
 plugins {
     java
-    kotlin("jvm") version "1.9.10"
-    id("org.springframework.boot") version "2.7.5"
-    id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    id("org.jetbrains.kotlin.plugin.spring") version "1.7.21"
-    id("org.jetbrains.kotlin.plugin.jpa") version "1.7.21"
-    kotlin("plugin.lombok") version "1.9.10"
-    kotlin("kapt") version "1.9.10"
+    kotlin("jvm") version "2.4.10"
+    id("org.springframework.boot") version "4.1.0"
+    id("org.jetbrains.kotlin.plugin.spring") version "2.4.10"
 }
 
 group = "com.buffer"
@@ -18,12 +15,6 @@ java.sourceCompatibility = JavaVersion.VERSION_17
 
 repositories {
     mavenCentral()
-}
-
-configurations {
-    compileOnly {
-        extendsFrom(configurations["annotationProcessor"])
-    }
 }
 
 sourceSets {
@@ -37,30 +28,30 @@ springBoot {
 }
 
 dependencies {
+    implementation(platform(SpringBootPlugin.BOM_COORDINATES))
+    annotationProcessor(platform(SpringBootPlugin.BOM_COORDINATES))
+    developmentOnly(platform(SpringBootPlugin.BOM_COORDINATES))
+    testImplementation(platform(SpringBootPlugin.BOM_COORDINATES))
+
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
-    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-webmvc")
+
+    // RestTemplateBuilder moved into its own module in Boot 4
+    implementation("org.springframework.boot:spring-boot-starter-restclient")
 
     //javacord
     implementation("org.javacord:javacord:3.7.0")
 
     // To make jackson work with kotlin
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.14.0")
+    implementation("tools.jackson.module:jackson-module-kotlin")
 
     // Unit conversion
     implementation("org.jscience:jscience:4.3.1")
 
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-    kapt("org.springframework.boot:spring-boot-configuration-processor")
-    annotationProcessor("org.projectlombok:lombok")
-
-
-    compileOnly("org.projectlombok:lombok")
 
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
-
-
-    runtimeOnly("mysql:mysql-connector-java")
 
 
     //log4j
@@ -75,15 +66,12 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+    // LorenaApplicationTests declares no @Test methods; Gradle 9 fails the task for that by default.
+    failOnNoDiscoveredTests = false
 }
-val compileKotlin: KotlinCompile by tasks
-compileKotlin.kotlinOptions {
-    jvmTarget = "17"
-}
-val compileTestKotlin: KotlinCompile by tasks
-compileTestKotlin.kotlinOptions {
-    jvmTarget = "17"
-}
-kapt {
-    keepJavacAnnotationProcessors = true
+
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_17
+    }
 }

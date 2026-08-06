@@ -5,14 +5,14 @@ import com.buffer.lorena.utils.Units.Companion.autoConverter
 import com.buffer.lorena.utils.Units.Companion.corresponding
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonInclude
-import com.fasterxml.jackson.databind.PropertyNamingStrategies
-import com.fasterxml.jackson.databind.annotation.JsonNaming
+import tools.jackson.databind.PropertyNamingStrategies
+import tools.jackson.databind.annotation.JsonNaming
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import org.javacord.api.entity.message.MessageType
 import org.javacord.api.event.message.MessageCreateEvent
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.boot.web.client.RestTemplateBuilder
+import org.springframework.boot.restclient.RestTemplateBuilder
 import org.springframework.stereotype.Service
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.getForObject
@@ -110,6 +110,7 @@ class UnitConversionService(
             .queryParam("base_currency", from).build().toUri()
         try {
             val result = restTemplate.getForObject<CurrencyResponse>(uri)
+                ?: return "Unknown error happened, sorry..."
             if (result.query.baseCurrency != from) return "Your from currency isn't supported"
 
             val conversionMultiplier = result.data[to] ?: return "Your to currency isn't supported"
